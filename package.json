@@ -3,9 +3,9 @@
     "version": "1.0.0",
     "description": "A Search Application Client for Elasticsearch",
     "license": "Apache-2.0",
-    "main": "lib/cjs/index.js",
-    "module": "lib/esm/index.js",
-    "types": "lib/esm/index.d.ts",
+    "main": "lib/index.js",
+    "module": "lib/index.js",
+    "types": "lib/index.d.ts",
     "directories": {
         "lib": "lib",
         "test": "__tests__"
@@ -20,11 +20,10 @@
         "test-ci": "jest --runInBand",
         "test": "jest",
         "clean": "rimraf lib",
-        "watch-js": "./bin/watch-js",
-        "build-js": "./bin/build-js",
-        "build": "npm run clean && npm run build-js",
-        "watch": "npm run build && npm run watch-js",
-        "prepare": "husky install"
+        "build": "tsc",
+        "watch": "tsc --watch",
+        "prepare": "husky install",
+        "prepublish": "yarn build"
     },
     "devDependencies": {
         "@types/jest": "^29.5.1",

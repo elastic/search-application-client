@@ -3,7 +3,7 @@
         "jsx": "react",
         "target": "es2015",
         "declaration": true,
-        "outDir": "lib/esm",
+        "outDir": "lib",
         "allowJs": true,
         "skipLibCheck": true,
         "strict": false,
