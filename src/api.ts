@@ -1,40 +1,53 @@
-import { Query } from './templates/v1'
+export interface IAPI {
+  post(body: any): Promise<any>
+}
 
-export class API {
-    constructor(private readonly apiKey: string, private readonly endpoint) {}
+export class API implements IAPI {
+  constructor(
+    private readonly apiKey: string,
+    private readonly endpoint: string,
+    private readonly path: string
+  ) {}
 
-    request(method: 'POST' | 'GET', url: string, body: Query) {
-        return fetch(`${this.endpoint}${url}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Apikey ${this.apiKey}`,
-            },
-            body: JSON.stringify(body),
-        })
-            .then((response) => {
-                if (!response.ok) {
-                    return response.json()
-                }
-            })
-            .then((body) => {
-                const error =
-                    body?.error?.caused_by?.reason || body?.error?.reason
+  static request(
+    method: 'POST' | 'GET',
+    url: string,
+    apiKey: string,
+    body?: Record<string, any>
+  ) {
+    return fetch(url, {
+      method,
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Apikey ${apiKey}`,
+      },
+      body: body ? JSON.stringify(body) : undefined,
+    })
+      .then((response) => {
+        if (!response.ok) {
+          return response.json()
+        }
+      })
+      .then((body) => {
+        const error = body?.error?.caused_by?.reason || body?.error?.reason
 
-                if (error) {
-                    throw new Error(error)
-                }
-            })
-            .catch((error) => {
-                console.error(error)
-            })
-    }
+        if (error) {
+          throw new Error(error)
+        }
 
-    post(url: string, body: Query): Promise<any> {
-        return this.request('POST', url, body)
-    }
+        return body
+      })
+      .catch((error) => {
+        console.error(error)
+      })
+  }
 
-    get(url: string, body: Query) {
-        return this.request('GET', url, body)
-    }
+  post(body) {
+    return API.request(
+      'POST',
+      `${this.endpoint}${this.path}`,
+      this.apiKey,
+      body
+    )
+  }
 }
