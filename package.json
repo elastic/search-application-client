@@ -23,7 +23,8 @@
         "build": "tsc",
         "watch": "tsc --watch",
         "prepare": "husky install",
-        "prepublish": "yarn build"
+        "prepublish": "yarn build",
+        "publish::local": "yarn build && cd examples/sandbox && rm -rf node_modules/@elastic/search-app-client && yarn add file:../../"
     },
     "devDependencies": {
         "@types/jest": "^29.5.1",
