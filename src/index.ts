@@ -1,5 +1,5 @@
 import { Client } from './client'
-import { IQueryBuilder } from './query_builder'
+import { QueryBuilder } from './query_builder'
 
 const throwParamRequiredError = (param: string) => {
   throw new Error(`${param} is required`)
@@ -10,7 +10,7 @@ export default function SearchApplicationClient(
   endpoint: string,
   apiKey: string,
   params: Record<string, any>
-): () => IQueryBuilder {
+): () => QueryBuilder {
   if (!applicationName) throwParamRequiredError('applicationName')
   if (!endpoint) throwParamRequiredError('endpoint')
   if (!apiKey) throwParamRequiredError('apiKey')

@@ -1,38 +1,30 @@
-import { IAPI } from './api'
+import { API } from './api'
 
 type Filter =
   | string
   | string[]
   | Record<string, number | number[] | string | string[]>
 
-export interface IQueryBuilder {
-  addFilter: (field: string, value: Filter) => IQueryBuilder
-  addFacetFilter: (field: string, value: Filter) => IQueryBuilder
-  addParameter: (parameter: string, value: string) => IQueryBuilder
-  query: (query: string) => IQueryBuilder
-  search: () => Promise<any>
-}
-
-export class QueryBuilder implements IQueryBuilder {
+export class QueryBuilder {
   private params = { params: { query: '' } }
 
-  constructor(private readonly apiClient: IAPI, baseParams) {
+  constructor(private readonly apiClient: API, baseParams) {
     this.params.params = baseParams
   }
 
-  addFacetFilter(field, value): IQueryBuilder {
+  addFacetFilter(field: string, value: Filter): this {
     return this
   }
 
-  addFilter(field, value): IQueryBuilder {
+  addFilter(field: string, value: Filter): this {
     return this
   }
 
-  addParameter(parameter: string, value: string): IQueryBuilder {
+  addParameter(parameter: string, value: string): this {
     return this
   }
 
-  query(query: string): IQueryBuilder {
+  query(query: string): this {
     this.params.params.query = query
 
     return this

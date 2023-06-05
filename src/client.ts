@@ -1,8 +1,8 @@
-import { API, IAPI } from './api'
+import { API } from './api'
 import { QueryBuilder } from './query_builder'
 
 export class Client {
-  private readonly apiClient: IAPI
+  private readonly apiClient: API
 
   constructor(
     private readonly applicationName: string,

@@ -1,8 +1,8 @@
-export interface IAPI {
-  post(body: any): Promise<any>
-}
+import { Cache } from './cache'
 
-export class API implements IAPI {
+const cache = new Cache()
+
+export class API {
   constructor(
     private readonly apiKey: string,
     private readonly endpoint: string,
@@ -15,6 +15,11 @@ export class API implements IAPI {
     apiKey: string,
     body?: Record<string, any>
   ) {
+    const cachedQueryResult = cache.getByRequestParams(method, url, body)
+    if (cachedQueryResult) {
+      return Promise.resolve(cachedQueryResult)
+    }
+
     return fetch(url, {
       method,
       headers: {
@@ -28,14 +33,16 @@ export class API implements IAPI {
           return response.json()
         }
       })
-      .then((body) => {
-        const error = body?.error?.caused_by?.reason || body?.error?.reason
+      .then((result) => {
+        const error = result?.error?.caused_by?.reason || result?.error?.reason
 
         if (error) {
           throw new Error(error)
         }
 
-        return body
+        cache.setByRequestParams(method, url, body, result)
+
+        return result
       })
       .catch((error) => {
         console.error(error)
