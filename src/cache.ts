@@ -39,8 +39,4 @@ export class Cache {
     const key = this.createKeyByRequestParams(method, url, params)
     this.set(key, value)
   }
-
-  clear() {
-    this.cache = {}
-  }
 }
