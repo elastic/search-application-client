@@ -1,6 +1,6 @@
 import { API } from './api'
 
-type Filter =
+type FilterValue =
   | string
   | string[]
   | { from: number; to: number }
@@ -8,9 +8,14 @@ type Filter =
   | number
   | number[]
 
+type Filter = Record<
+  'match' | 'terms' | 'range',
+  { [field: string]: FilterValue }
+>
+
 interface Params {
   params: {
-    _es_filters?: Record<string, any>
+    _es_filters?: { bool: { must: Filter[] } }
     query?: string
     result_fields?: string[]
     search_fields?: string[]
@@ -26,11 +31,21 @@ export class QueryBuilder {
     this.params.params = baseParams
   }
 
-  addFacetFilter(field: string, value: Filter): this {
+  addFacetFilter(field: string, value: FilterValue): this {
     return this
   }
 
-  addFilter(field: string, value: Filter): this {
+  addFilter(field: string, value: FilterValue): this {
+    return this
+  }
+
+  setFilter(value: Filter): this {
+    if (!this.params.params._es_filters) {
+      this.params.params._es_filters = { bool: { must: [] } }
+    }
+
+    this.params.params._es_filters.bool.must.push(value)
+
     return this
   }
 
