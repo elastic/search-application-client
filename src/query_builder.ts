@@ -3,10 +3,24 @@ import { API } from './api'
 type Filter =
   | string
   | string[]
-  | Record<string, number | number[] | string | string[]>
+  | { from: number; to: number }
+  | { from: number; to: number }[]
+  | number
+  | number[]
+
+interface Params {
+  params: {
+    _es_filters?: Record<string, any>
+    query?: string
+    result_fields?: string[]
+    search_fields?: string[]
+    size?: number
+    from?: number
+  }
+}
 
 export class QueryBuilder {
-  private params = { params: { query: '' } }
+  private params: Params = { params: {} }
 
   constructor(private readonly apiClient: API, baseParams) {
     this.params.params = baseParams
@@ -21,6 +35,8 @@ export class QueryBuilder {
   }
 
   addParameter(parameter: string, value: string): this {
+    this.params.params[parameter] = value
+
     return this
   }
 
