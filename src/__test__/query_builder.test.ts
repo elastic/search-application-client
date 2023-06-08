@@ -49,7 +49,7 @@ describe('QueryBuilder', () => {
 
       expect(queryBuilder.filter).toEqual({
         match: {
-          Rated: 'PG2',
+          SubRated: 'PG2',
         },
       })
     })

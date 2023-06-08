@@ -4,11 +4,10 @@ exports[`Full integration test should work: Response with facets 1`] = `
 [
   {
     "avg": 1995.7777777777778,
-    "count": undefined,
+    "count": 9,
     "max": 2008,
     "min": 1986,
     "sum": 17962,
-    "value": undefined,
   },
   {
     "entries": [

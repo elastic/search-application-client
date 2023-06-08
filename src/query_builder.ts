@@ -53,12 +53,11 @@ const transformResponse = (
       }
     } else if (facetConfiguration.type === 'stats') {
       return {
-        value: aggregation.key,
-        count: aggregation.doc_count,
         min: aggregation.min,
         max: aggregation.max,
         avg: aggregation.avg,
         sum: aggregation.sum,
+        count: aggregation.count,
       }
     }
   })
