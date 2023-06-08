@@ -40,6 +40,18 @@ describe('QueryBuilder', () => {
           Rated: 'PG',
         },
       })
+
+      queryBuilder.setFilter({
+        match: {
+          SubRated: 'PG2',
+        },
+      })
+
+      expect(queryBuilder.filter).toEqual({
+        match: {
+          Rated: 'PG2',
+        },
+      })
     })
   })
 
