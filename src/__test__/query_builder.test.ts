@@ -48,7 +48,7 @@ describe('QueryBuilder', () => {
       })
     })
 
-    test('should add filter to the end of array', () => {
+    test('should overwrite filter when called twice', () => {
       queryBuilder.setFilter({
         match: {
           Rated: 'PG',
@@ -64,11 +64,6 @@ describe('QueryBuilder', () => {
       expect(queryBuilder.params.params._es_filters).toEqual({
         bool: {
           must: [
-            {
-              match: {
-                Rated: 'PG',
-              },
-            },
             {
               match: {
                 SubRated: 'PG2',
