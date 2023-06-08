@@ -59,9 +59,12 @@ export class QueryBuilder {
 
     const elasticType = mapFacetTypeToElastic[facetInfo.type]
 
-    this.setFilter({
-      [elasticType]: { [facetInfo.field]: value },
-    } as FilterField)
+    this.esFilter = [
+      ...this.esFilter,
+      {
+        [elasticType]: { [facetInfo.field]: value },
+      } as FilterField,
+    ]
 
     return this
   }
@@ -70,14 +73,20 @@ export class QueryBuilder {
     return this
   }
 
-  setFilter(value: FilterField): this {
-    if (!this.params.params._es_filters) {
-      this.params.params._es_filters = { bool: { must: [] } }
-    }
-
-    this.params.params._es_filters.bool.must.push(value)
+  setFilter(value: FilterField | FilterField[]): this {
+    this.esFilter = value
 
     return this
+  }
+
+  private get esFilter(): FilterField[] {
+    return this.params.params._es_filters?.bool.must || []
+  }
+
+  private set esFilter(value: FilterField | FilterField[]) {
+    this.params.params._es_filters = {
+      bool: { must: Array.isArray(value) ? value : [value] },
+    }
   }
 
   addParameter(parameter: string, value: string): this {
