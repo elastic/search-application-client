@@ -15,10 +15,10 @@ export class API {
     apiKey: string,
     body?: Record<string, any>
   ) {
-    const cachedQueryResult = cache.getByRequestParams(method, url, body)
-    if (cachedQueryResult) {
-      return Promise.resolve(cachedQueryResult)
-    }
+    // const cachedQueryResult = cache.getByRequestParams(method, url, body)
+    // if (cachedQueryResult) {
+    //   return Promise.resolve(cachedQueryResult)
+    // }
 
     return fetch(url, {
       method,
@@ -29,7 +29,7 @@ export class API {
       body: body ? JSON.stringify(body) : undefined,
     })
       .then((response) => {
-        if (!response.ok) {
+        if (response.ok) {
           return response.json()
         }
       })

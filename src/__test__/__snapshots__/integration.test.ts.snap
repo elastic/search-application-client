@@ -1,0 +1,622 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Full integration test should work: Response with facets 1`] = `
+[
+  {
+    "avg": 1995.7777777777778,
+    "count": undefined,
+    "max": 2008,
+    "min": 1986,
+    "sum": 17962,
+    "value": undefined,
+  },
+  {
+    "entries": [
+      {
+        "count": 1,
+        "value": "Alfonso Arau",
+      },
+      {
+        "count": 1,
+        "value": "Andy Wachowski",
+      },
+      {
+        "count": 1,
+        "value": "Francis Ford Coppola",
+      },
+      {
+        "count": 1,
+        "value": "Howard Deutch",
+      },
+      {
+        "count": 1,
+        "value": "Jan de Bont",
+      },
+      {
+        "count": 1,
+        "value": "Lana Wachowski",
+      },
+      {
+        "count": 1,
+        "value": "Peter Hewitt",
+      },
+      {
+        "count": 1,
+        "value": "Scott Derrickson",
+      },
+      {
+        "count": 1,
+        "value": "Taylor Hackford",
+      },
+      {
+        "count": 1,
+        "value": "Tim Hunter",
+      },
+    ],
+    "name": "directors_facet",
+  },
+  {
+    "entries": [
+      {
+        "count": 73,
+        "value": "Naveen Andrews",
+      },
+      {
+        "count": 56,
+        "value": "Jennifer Carpenter",
+      },
+      {
+        "count": 56,
+        "value": "Michael C. Hall",
+      },
+      {
+        "count": 53,
+        "value": "Emilie de Ravin",
+      },
+      {
+        "count": 49,
+        "value": "Jared Padalecki",
+      },
+      {
+        "count": 49,
+        "value": "Jensen Ackles",
+      },
+      {
+        "count": 41,
+        "value": "Hugh Laurie",
+      },
+      {
+        "count": 40,
+        "value": "Julie Benz",
+      },
+      {
+        "count": 39,
+        "value": "Henry Ian Cusick",
+      },
+      {
+        "count": 34,
+        "value": "Matthew Fox",
+      },
+    ],
+    "name": "actors_facet",
+  },
+]
+`;
+
+exports[`Full integration test should work: Response with results 1`] = `
+{
+  "_shards": {
+    "failed": 0,
+    "skipped": 0,
+    "successful": 2,
+    "total": 2,
+  },
+  "aggregations": {
+    "directors_facet": {
+      "buckets": [
+        {
+          "doc_count": 1,
+          "key": "Alfonso Arau",
+        },
+        {
+          "doc_count": 1,
+          "key": "Andy Wachowski",
+        },
+        {
+          "doc_count": 1,
+          "key": "Francis Ford Coppola",
+        },
+        {
+          "doc_count": 1,
+          "key": "Howard Deutch",
+        },
+        {
+          "doc_count": 1,
+          "key": "Jan de Bont",
+        },
+        {
+          "doc_count": 1,
+          "key": "Lana Wachowski",
+        },
+        {
+          "doc_count": 1,
+          "key": "Peter Hewitt",
+        },
+        {
+          "doc_count": 1,
+          "key": "Scott Derrickson",
+        },
+        {
+          "doc_count": 1,
+          "key": "Taylor Hackford",
+        },
+        {
+          "doc_count": 1,
+          "key": "Tim Hunter",
+        },
+      ],
+      "doc_count_error_upper_bound": 0,
+      "sum_other_doc_count": 0,
+    },
+    "year_facet": {
+      "avg": 1995.7777777777778,
+      "count": 9,
+      "max": 2008,
+      "min": 1986,
+      "sum": 17962,
+    },
+  },
+  "hits": {
+    "hits": [
+      {
+        "_id": "tt0118971",
+        "_index": "search-movies",
+        "_score": 0,
+        "_source": {
+          "Awards": "1 win & 5 nominations.",
+          "Plot": "A hotshot lawyer gets more than he bargained for when he learns his new boss is Lucifer himself.",
+          "Poster": "http://ia.media-imdb.com/images/M/MV5BMTcyMzI3NDM4Nl5BMl5BanBnXkFtZTcwMTUxOTYzNA@@._V1_SX300.jpg",
+          "PosterS3": "https://s3-eu-west-1.amazonaws.com/imdbimages/images/MV5BMTcyMzI3NDM4Nl5BMl5BanBnXkFtZTcwMTUxOTYzNA@@._V1_SX300.jpg",
+          "Rated": "R",
+          "Response": "True",
+          "Title": "The Devil's Advocate",
+          "Type": "movie",
+          "actors": [
+            "Keanu Reeves",
+            "Al Pacino",
+            "Charlize Theron",
+            "Jeffrey Jones",
+          ],
+          "country": [
+            "USA",
+            "Germany",
+          ],
+          "directors": [
+            "Taylor Hackford",
+          ],
+          "genres": [
+            "Drama",
+            "Mystery",
+            "Thriller",
+          ],
+          "id": "tt0118971",
+          "imdbID": "tt0118971",
+          "imdbRating": 7.5,
+          "imdbVotes": 198065,
+          "language": [
+            "English",
+            "German",
+            "Italian",
+            "Mandarin",
+            "Spanish",
+          ],
+          "metascore": 60,
+          "released": "1997-10-16T23:00:00.000Z",
+          "runtime": 144,
+          "writers": [
+            "Andrew Neiderman",
+            "Jonathan Lemkin ",
+            "Tony Gilroy ",
+          ],
+          "year": 1997,
+        },
+      },
+      {
+        "_id": "tt0111257",
+        "_index": "search-movies",
+        "_score": 0,
+        "_source": {
+          "Awards": "Won 2 Oscars. Another 12 wins & 15 nominations.",
+          "Plot": "A young cop must prevent a bomb exploding aboard a city bus by keeping its speed above 50 mph.",
+          "Poster": "http://ia.media-imdb.com/images/M/MV5BNzczNDQyMTc2MF5BMl5BanBnXkFtZTgwNjI2NzQxMTE@._V1_SX300.jpg",
+          "PosterS3": "https://s3-eu-west-1.amazonaws.com/imdbimages/images/MV5BNzczNDQyMTc2MF5BMl5BanBnXkFtZTgwNjI2NzQxMTE@._V1_SX300.jpg",
+          "Rated": "R",
+          "Response": "True",
+          "Title": "Speed",
+          "Type": "movie",
+          "actors": [
+            "Keanu Reeves",
+            "Dennis Hopper",
+            "Sandra Bullock",
+            "Joe Morton",
+          ],
+          "country": [
+            "USA",
+          ],
+          "directors": [
+            "Jan de Bont",
+          ],
+          "genres": [
+            "Action",
+            "Crime",
+            "Thriller",
+          ],
+          "id": "tt0111257",
+          "imdbID": "tt0111257",
+          "imdbRating": 7.2,
+          "imdbVotes": 202346,
+          "language": [
+            "English",
+          ],
+          "metascore": 78,
+          "released": "1994-06-09T23:00:00.000Z",
+          "runtime": 116,
+          "writers": [
+            "Graham Yost",
+          ],
+          "year": 1994,
+        },
+      },
+      {
+        "_id": "tt0103874",
+        "_index": "search-movies",
+        "_score": 0,
+        "_source": {
+          "Awards": "Won 3 Oscars. Another 9 wins & 13 nominations.",
+          "Plot": "The vampire comes to England to seduce a visitor's fiancée and inflict havoc in the foreign land.",
+          "Poster": "http://ia.media-imdb.com/images/M/MV5BMTI5MTU0NjAyMl5BMl5BanBnXkFtZTcwNTM3MjM1MQ@@._V1_SX300.jpg",
+          "PosterS3": "https://s3-eu-west-1.amazonaws.com/imdbimages/images/MV5BMTI5MTU0NjAyMl5BMl5BanBnXkFtZTcwNTM3MjM1MQ@@._V1_SX300.jpg",
+          "Rated": "R",
+          "Response": "True",
+          "Title": "Dracula",
+          "Type": "movie",
+          "actors": [
+            "Gary Oldman",
+            "Winona Ryder",
+            "Anthony Hopkins",
+            "Keanu Reeves",
+          ],
+          "country": [
+            "USA",
+          ],
+          "directors": [
+            "Francis Ford Coppola",
+          ],
+          "genres": [
+            "Drama",
+            "Fantasy",
+            "Horror",
+          ],
+          "id": "tt0103874",
+          "imdbID": "tt0103874",
+          "imdbRating": 7.5,
+          "imdbVotes": 110033,
+          "language": [
+            "English",
+            "Romanian",
+            "Greek",
+            "Bulgarian",
+            "Latin",
+          ],
+          "metascore": 57,
+          "released": "1992-11-13T00:00:00.000Z",
+          "runtime": 128,
+          "writers": [
+            "Bram Stoker",
+            "James V. Hart ",
+          ],
+          "year": 1992,
+        },
+      },
+      {
+        "_id": "tt0191397",
+        "_index": "search-movies",
+        "_score": 0,
+        "_source": {
+          "Awards": null,
+          "Plot": "During a pro football strike, the owners hire substitute players.",
+          "Poster": "http://ia.media-imdb.com/images/M/MV5BMTcwODQ4NDEzMl5BMl5BanBnXkFtZTcwMTIwMTgyMQ@@._V1_SX300.jpg",
+          "PosterS3": "https://s3-eu-west-1.amazonaws.com/imdbimages/images/MV5BMTcwODQ4NDEzMl5BMl5BanBnXkFtZTcwMTIwMTgyMQ@@._V1_SX300.jpg",
+          "Rated": "PG-13",
+          "Response": "True",
+          "Title": "The Replacements",
+          "Type": "movie",
+          "actors": [
+            "Keanu Reeves",
+            "Gene Hackman",
+            "Brooke Langton",
+            "Orlando Jones",
+          ],
+          "country": [
+            "USA",
+          ],
+          "directors": [
+            "Howard Deutch",
+          ],
+          "genres": [
+            "Comedy",
+            "Sport",
+          ],
+          "id": "tt0191397",
+          "imdbID": "tt0191397",
+          "imdbRating": 6.5,
+          "imdbVotes": 38977,
+          "language": [
+            "English",
+            "American Sign Language",
+          ],
+          "metascore": 30,
+          "released": "2000-08-10T23:00:00.000Z",
+          "runtime": 118,
+          "writers": [
+            "Vince McKewin",
+          ],
+          "year": 2000,
+        },
+      },
+      {
+        "_id": "tt0114887",
+        "_index": "search-movies",
+        "_score": 0,
+        "_source": {
+          "Awards": "Won 1 Golden Globe. Another 3 nominations.",
+          "Plot": "After returning from the war, Paul and a young woman meet on a bus as she's headed home from college to help with the grape harvest and face her Old World domineering dad. The woman has not...",
+          "Poster": "http://ia.media-imdb.com/images/M/MV5BNjg3OTQzOTM5MF5BMl5BanBnXkFtZTYwNTY5NzY5._V1_SX300.jpg",
+          "PosterS3": "https://s3-eu-west-1.amazonaws.com/imdbimages/images/MV5BNjg3OTQzOTM5MF5BMl5BanBnXkFtZTYwNTY5NzY5._V1_SX300.jpg",
+          "Rated": "PG-13",
+          "Response": "True",
+          "Title": "A Walk in the Clouds",
+          "Type": "movie",
+          "actors": [
+            "Keanu Reeves",
+            "Aitana Sánchez-Gijón",
+            "Anthony Quinn",
+            "Giancarlo Giannini",
+          ],
+          "country": [
+            "USA",
+            "Mexico",
+          ],
+          "directors": [
+            "Alfonso Arau",
+          ],
+          "genres": [
+            "Drama",
+            "Romance",
+          ],
+          "id": "tt0114887",
+          "imdbID": "tt0114887",
+          "imdbRating": 6.6,
+          "imdbVotes": 19542,
+          "language": [
+            "English",
+          ],
+          "metascore": null,
+          "released": "1995-08-10T23:00:00.000Z",
+          "runtime": 102,
+          "writers": [
+            "Robert Mark Kamen ",
+            "Mark Miller ",
+            "Harvey Weitzman ",
+            "Piero Tellini",
+            "Cesare Zavattini",
+            "Vittorio de Benedetti",
+          ],
+          "year": 1995,
+        },
+      },
+      {
+        "_id": "tt0133093",
+        "_index": "search-movies",
+        "_score": 0,
+        "_source": {
+          "Awards": "Won 4 Oscars. Another 29 wins & 36 nominations.",
+          "Plot": "A computer hacker learns from mysterious rebels about the true nature of his reality and his role in the war against its controllers.",
+          "Poster": "http://ia.media-imdb.com/images/M/MV5BMTkxNDYxOTA4M15BMl5BanBnXkFtZTgwNTk0NzQxMTE@._V1_SX300.jpg",
+          "PosterS3": "https://s3-eu-west-1.amazonaws.com/imdbimages/images/MV5BMTkxNDYxOTA4M15BMl5BanBnXkFtZTgwNTk0NzQxMTE@._V1_SX300.jpg",
+          "Rated": "R",
+          "Response": "True",
+          "Title": "The Matrix",
+          "Type": "movie",
+          "actors": [
+            "Keanu Reeves",
+            "Laurence Fishburne",
+            "Carrie-Anne Moss",
+            "Hugo Weaving",
+          ],
+          "country": [
+            "USA",
+            "Australia",
+          ],
+          "directors": [
+            "Andy Wachowski",
+            "Lana Wachowski",
+          ],
+          "genres": [
+            "Action",
+            "Adventure",
+            "Sci-Fi",
+          ],
+          "id": "tt0133093",
+          "imdbID": "tt0133093",
+          "imdbRating": 8.7,
+          "imdbVotes": 824103,
+          "language": [
+            "English",
+          ],
+          "metascore": 73,
+          "released": "1999-03-30T23:00:00.000Z",
+          "runtime": 136,
+          "writers": [
+            "Andy Wachowski",
+            "Lana Wachowski",
+          ],
+          "year": 1999,
+        },
+      },
+      {
+        "_id": "tt0091860",
+        "_index": "search-movies",
+        "_score": 0,
+        "_source": {
+          "Awards": "3 wins & 5 nominations.",
+          "Plot": "A high school slacker kills his girlfriend and shows off her dead body to his friends. However, the friends' reaction is almost as ambiguous and perplexing as the crime itself.",
+          "Poster": "http://ia.media-imdb.com/images/M/MV5BMTcxNzQ4Mzc1Ml5BMl5BanBnXkFtZTcwMzMxNDMzMQ@@._V1_SX300.jpg",
+          "PosterS3": "https://s3-eu-west-1.amazonaws.com/imdbimages/images/MV5BMTcxNzQ4Mzc1Ml5BMl5BanBnXkFtZTcwMzMxNDMzMQ@@._V1_SX300.jpg",
+          "Rated": "R",
+          "Response": "True",
+          "Title": "River's Edge",
+          "Type": "movie",
+          "actors": [
+            "Crispin Glover",
+            "Keanu Reeves",
+            "Ione Skye",
+            "Daniel Roebuck",
+          ],
+          "country": [
+            "USA",
+          ],
+          "directors": [
+            "Tim Hunter",
+          ],
+          "genres": [
+            "Crime",
+            "Drama",
+          ],
+          "id": "tt0091860",
+          "imdbID": "tt0091860",
+          "imdbRating": 7.1,
+          "imdbVotes": 9722,
+          "language": [
+            "English",
+          ],
+          "metascore": null,
+          "released": "1987-05-07T23:00:00.000Z",
+          "runtime": 99,
+          "writers": [
+            "Neal Jimenez",
+          ],
+          "year": 1986,
+        },
+      },
+      {
+        "_id": "tt0101452",
+        "_index": "search-movies",
+        "_score": 0,
+        "_source": {
+          "Awards": "1 win & 1 nomination.",
+          "Plot": "A tyrant from the future creates evil android doubles of Bill and Ted and sends them back to eliminate the originals.",
+          "Poster": "http://ia.media-imdb.com/images/M/MV5BMjAwNjQyODA2Ml5BMl5BanBnXkFtZTcwNDM4MzcyNA@@._V1_SX300.jpg",
+          "PosterS3": "https://s3-eu-west-1.amazonaws.com/imdbimages/images/MV5BMjAwNjQyODA2Ml5BMl5BanBnXkFtZTcwNDM4MzcyNA@@._V1_SX300.jpg",
+          "Rated": "PG",
+          "Response": "True",
+          "Title": "Bill & Ted's Bogus Journey",
+          "Type": "movie",
+          "actors": [
+            "Keanu Reeves",
+            "Alex Winter",
+            "William Sadler",
+            "Joss Ackland",
+          ],
+          "country": [
+            "USA",
+          ],
+          "directors": [
+            "Peter Hewitt",
+          ],
+          "genres": [
+            "Adventure",
+            "Comedy",
+            "Fantasy",
+          ],
+          "id": "tt0101452",
+          "imdbID": "tt0101452",
+          "imdbRating": 6.1,
+          "imdbVotes": 40137,
+          "language": [
+            "English",
+            "Italian",
+            "Russian",
+          ],
+          "metascore": 60,
+          "released": "1991-07-18T23:00:00.000Z",
+          "runtime": 93,
+          "writers": [
+            "Chris Matheson",
+            "Ed Solomon",
+            "Chris Matheson",
+            "Ed Solomon",
+          ],
+          "year": 1991,
+        },
+      },
+      {
+        "_id": "tt0970416",
+        "_index": "search-movies",
+        "_score": 0,
+        "_source": {
+          "Awards": "3 wins & 5 nominations.",
+          "Plot": "A remake of the 1951 classic sci-fi film about an alien visitor and his giant robot counterpart who visit Earth.",
+          "Poster": "http://ia.media-imdb.com/images/M/MV5BNzMyNjE0MTcxNF5BMl5BanBnXkFtZTcwODcyOTMwMg@@._V1_SX300.jpg",
+          "PosterS3": "https://s3-eu-west-1.amazonaws.com/imdbimages/images/MV5BNzMyNjE0MTcxNF5BMl5BanBnXkFtZTcwODcyOTMwMg@@._V1_SX300.jpg",
+          "Rated": "PG-13",
+          "Response": "True",
+          "Title": "The Day the Earth Stood Still",
+          "Type": "movie",
+          "actors": [
+            "Keanu Reeves",
+            "Jennifer Connelly",
+            "Kathy Bates",
+            "Jaden Smith",
+          ],
+          "country": [
+            "USA",
+            "Canada",
+          ],
+          "directors": [
+            "Scott Derrickson",
+          ],
+          "genres": [
+            "Drama",
+            "Sci-Fi",
+            "Thriller",
+          ],
+          "id": "tt0970416",
+          "imdbID": "tt0970416",
+          "imdbRating": 5.5,
+          "imdbVotes": 115183,
+          "language": [
+            "English",
+            "Mandarin",
+          ],
+          "metascore": 40,
+          "released": "2008-12-12T00:00:00.000Z",
+          "runtime": 104,
+          "writers": [
+            "David Scarpa ",
+            "Edmund H. North",
+          ],
+          "year": 2008,
+        },
+      },
+    ],
+    "max_score": 0,
+    "total": {
+      "relation": "eq",
+      "value": 9,
+    },
+  },
+  "timed_out": false,
+  "took": 2,
+}
+`;

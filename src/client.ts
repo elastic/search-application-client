@@ -13,7 +13,7 @@ export class Client {
     this.apiClient = new API(
       apiKey,
       endpoint,
-      `/_application/${applicationName}/_search`
+      `/_application/search_application/${applicationName}/_search`
     )
   }
 
