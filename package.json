@@ -16,7 +16,7 @@
   "scripts": {
     "format": "prettier --ignore-unknown --ignore-path .gitignore .",
     "format:write": "yarn format --write",
-    "lint": "eslint --ext *.ts,*.tsx,*.js,*.jsx --ignore-pattern '**/node_modules/**' --ignore-pattern '**/lib/**'",
+    "lint": "eslint --ext *.ts,*.tsx,*.js,*.jsx --ignore-pattern '**/node_modules/**' --ignore-pattern '**/lib/**' --ignore-pattern '**/build/**'",
     "test:ci": "jest --runInBand",
     "test": "jest",
     "clean": "rimraf lib",

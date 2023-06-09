@@ -5,15 +5,17 @@ export class Client {
   private readonly apiClient: API
 
   constructor(
-    private readonly applicationName: string,
-    private readonly endpoint: string,
-    private readonly apiKey: string,
-    public baseParams: Record<string, any>
+    applicationName: string,
+    endpoint: string,
+    apiKey: string,
+    public baseParams: Record<string, any>,
+    requestHeaders?: Record<string, string>
   ) {
     this.apiClient = new API(
       apiKey,
       endpoint,
-      `/_application/search_application/${applicationName}/_search`
+      `/_application/search_application/${applicationName}/_search`,
+      requestHeaders
     )
   }
 
