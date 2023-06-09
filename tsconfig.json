@@ -3,7 +3,8 @@
     "jsx": "react",
     "target": "es2015",
     "declaration": true,
-    "outDir": "lib",
+    "declarationDir": "dist",
+    "outDir": "dist",
     "allowJs": true,
     "skipLibCheck": true,
     "strict": false,
@@ -14,5 +15,5 @@
     "resolveJsonModule": true,
     "isolatedModules": true
   },
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "dist", "examples"]
 }
