@@ -1,5 +1,6 @@
 import { API } from './api'
 import { FacetConfiguration, RequestBuilder } from './request_builder'
+import { SortFields } from './types'
 
 type BaseValueFilter = string | string[] | number | number[]
 type BaseRangeFilter = {
@@ -37,30 +38,44 @@ const transformResponse = (
     }
   }, {})
 
-  const facets = Object.keys(combinedAggregations).map((facetName) => {
-    const facetConfiguration =
-      facetConfigurations[facetName.replace('_facet', '')]
-    const aggregation = combinedAggregations[facetName]
-    if (facetConfiguration.type === 'terms') {
-      return {
-        name: facetName,
-        entries: aggregation.buckets.map((bucket) => {
-          return {
-            value: bucket.key,
-            count: bucket.doc_count,
-          }
-        }),
+  const facets = Object.keys(combinedAggregations).reduce(
+    (facets, facetName) => {
+      const facetConfiguration =
+        facetConfigurations[facetName.replace('_facet', '')]
+      if (!facetConfiguration) return facets
+
+      const aggregation = combinedAggregations[facetName]
+      if (facetConfiguration.type === 'terms') {
+        return [
+          ...facets,
+          {
+            name: facetName,
+            entries: aggregation.buckets.map((bucket) => {
+              return {
+                value: bucket.key,
+                count: bucket.doc_count,
+              }
+            }),
+          },
+        ]
+      } else if (facetConfiguration.type === 'stats') {
+        return [
+          ...facets,
+          {
+            name: facetName,
+            stats: {
+              min: aggregation.min,
+              max: aggregation.max,
+              avg: aggregation.avg,
+              sum: aggregation.sum,
+              count: aggregation.count,
+            },
+          },
+        ]
       }
-    } else if (facetConfiguration.type === 'stats') {
-      return {
-        min: aggregation.min,
-        max: aggregation.max,
-        avg: aggregation.avg,
-        sum: aggregation.sum,
-        count: aggregation.count,
-      }
-    }
-  })
+    },
+    []
+  )
 
   return {
     ...results[0],
@@ -71,6 +86,7 @@ const transformResponse = (
 export class QueryBuilder {
   readonly facets: Record<string, FacetConfiguration>
   facetFilters: Record<string, FilterFieldValue[]> = {}
+  sort: SortFields
   filter: FilterField
   params: Params = {}
 
@@ -110,16 +126,23 @@ export class QueryBuilder {
     return this
   }
 
+  setSort(sort: SortFields): this {
+    this.sort = sort
+
+    return this
+  }
+
   async search(): Promise<any> {
     const requests = new RequestBuilder(
       this.facets,
       this.facetFilters,
       this.filter,
+      this.sort,
       this.params
     ).build()
 
     const results = await Promise.all(
-      requests.map((request) => this.apiClient.post(request))
+      requests.map((request) => this.apiClient.post({ params: request }))
     )
 
     return transformResponse(results, this.facets)

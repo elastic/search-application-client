@@ -24,6 +24,7 @@ describe('facets builder', () => {
         directors: ['director1', 'director2'],
       },
       null,
+      null,
       {
         query: 'test',
         size: 10,
