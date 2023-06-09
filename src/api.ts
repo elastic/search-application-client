@@ -15,10 +15,10 @@ export class API {
     apiKey: string,
     body?: Record<string, any>
   ) {
-    // const cachedQueryResult = cache.getByRequestParams(method, url, body)
-    // if (cachedQueryResult) {
-    //   return Promise.resolve(cachedQueryResult)
-    // }
+    const cachedQueryResult = cache.getByRequestParams(method, url, body)
+    if (cachedQueryResult) {
+      return Promise.resolve(cachedQueryResult)
+    }
 
     return fetch(url, {
       method,

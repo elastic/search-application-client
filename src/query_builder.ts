@@ -63,8 +63,8 @@ const transformResponse = (
   })
 
   return {
+    ...results[0],
     facets,
-    response: results[0],
   }
 }
 
