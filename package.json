@@ -3,25 +3,20 @@
   "version": "1.0.0",
   "description": "A Search Application Client for Elasticsearch",
   "license": "Apache-2.0",
-  "main": "lib/index.js",
-  "module": "lib/index.js",
-  "types": "lib/index.d.ts",
-  "directories": {
-    "lib": "lib",
-    "test": "__tests__"
-  },
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
   "files": [
-    "lib"
+    "dist"
   ],
   "scripts": {
     "format": "prettier --ignore-unknown --ignore-path .gitignore .",
     "format:write": "yarn format --write",
-    "lint": "eslint --ext *.ts,*.tsx,*.js,*.jsx --ignore-pattern '**/node_modules/**' --ignore-pattern '**/lib/**' --ignore-pattern '**/build/**'",
+    "lint": "eslint --ext *.ts,*.tsx,*.js,*.jsx --ignore-pattern '**/node_modules/**' --ignore-pattern '**/dist/**' --ignore-pattern '**/build/**'",
     "test:ci": "jest --runInBand",
     "test": "jest",
-    "clean": "rimraf lib",
-    "build": "tsc",
-    "watch": "tsc --watch",
+    "build": "tsup --minify",
+    "watch": "tsup --watch",
     "prepare": "husky install",
     "prepublish": "yarn build",
     "publish::local": "yarn build && cd examples/sandbox && rm -rf node_modules/@elastic/search-app-client && yarn add file:../../"
@@ -39,6 +34,7 @@
     "lint-staged": "^13.2.2",
     "prettier": "^2.8.8",
     "ts-jest": "^29.1.0",
+    "tsup": "^6.7.0",
     "typescript": "^5.0.4"
   },
   "lint-staged": {
