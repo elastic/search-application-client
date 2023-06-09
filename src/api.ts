@@ -29,7 +29,7 @@ export class API {
       body: body ? JSON.stringify(body) : undefined,
     })
       .then((response) => {
-        if (!response.ok) {
+        if (response.ok) {
           return response.json()
         }
       })

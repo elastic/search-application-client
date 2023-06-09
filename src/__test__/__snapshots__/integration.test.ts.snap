@@ -1,0 +1,105 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Full integration test should work: Response with facets 1`] = `
+[
+  {
+    "avg": 1995.7777777777778,
+    "count": 9,
+    "max": 2008,
+    "min": 1986,
+    "sum": 17962,
+  },
+  {
+    "entries": [
+      {
+        "count": 1,
+        "value": "Alfonso Arau",
+      },
+      {
+        "count": 1,
+        "value": "Andy Wachowski",
+      },
+      {
+        "count": 1,
+        "value": "Francis Ford Coppola",
+      },
+      {
+        "count": 1,
+        "value": "Howard Deutch",
+      },
+      {
+        "count": 1,
+        "value": "Jan de Bont",
+      },
+      {
+        "count": 1,
+        "value": "Lana Wachowski",
+      },
+      {
+        "count": 1,
+        "value": "Peter Hewitt",
+      },
+      {
+        "count": 1,
+        "value": "Scott Derrickson",
+      },
+      {
+        "count": 1,
+        "value": "Taylor Hackford",
+      },
+      {
+        "count": 1,
+        "value": "Tim Hunter",
+      },
+    ],
+    "name": "directors_facet",
+  },
+  {
+    "entries": [
+      {
+        "count": 73,
+        "value": "Naveen Andrews",
+      },
+      {
+        "count": 56,
+        "value": "Jennifer Carpenter",
+      },
+      {
+        "count": 56,
+        "value": "Michael C. Hall",
+      },
+      {
+        "count": 53,
+        "value": "Emilie de Ravin",
+      },
+      {
+        "count": 49,
+        "value": "Jared Padalecki",
+      },
+      {
+        "count": 49,
+        "value": "Jensen Ackles",
+      },
+      {
+        "count": 41,
+        "value": "Hugh Laurie",
+      },
+      {
+        "count": 40,
+        "value": "Julie Benz",
+      },
+      {
+        "count": 39,
+        "value": "Henry Ian Cusick",
+      },
+      {
+        "count": 34,
+        "value": "Matthew Fox",
+      },
+    ],
+    "name": "actors_facet",
+  },
+]
+`;
+
+exports[`Full integration test should work: Response with results 1`] = `undefined`;

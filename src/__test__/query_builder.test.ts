@@ -10,13 +10,13 @@ describe('QueryBuilder', () => {
 
   describe('addParameter', () => {
     test('should params be empty', () => {
-      expect(queryBuilder.params.params).toEqual({})
+      expect(queryBuilder.params).toEqual({})
     })
 
     test('should add param to params', () => {
       queryBuilder.addParameter('query', 'test')
       queryBuilder.addParameter('custom', 'this')
-      expect(queryBuilder.params.params).toEqual({
+      expect(queryBuilder.params).toEqual({
         query: 'test',
         custom: 'this',
       })
@@ -25,7 +25,7 @@ describe('QueryBuilder', () => {
 
   describe('setFilter', () => {
     test('should _es_filters be undefined when not passed filters', () => {
-      expect(queryBuilder.params.params._es_filters).toBeUndefined()
+      expect(queryBuilder.filter).toBeUndefined()
     })
 
     test('should set _es_filters when pass object', () => {
@@ -35,21 +35,7 @@ describe('QueryBuilder', () => {
         },
       })
 
-      expect(queryBuilder.params.params._es_filters).toEqual({
-        bool: {
-          must: [
-            {
-              match: {
-                Rated: 'PG',
-              },
-            },
-          ],
-        },
-      })
-    })
-
-    test('should overwrite filter when called twice', () => {
-      queryBuilder.setFilter({
+      expect(queryBuilder.filter).toEqual({
         match: {
           Rated: 'PG',
         },
@@ -61,15 +47,9 @@ describe('QueryBuilder', () => {
         },
       })
 
-      expect(queryBuilder.params.params._es_filters).toEqual({
-        bool: {
-          must: [
-            {
-              match: {
-                SubRated: 'PG2',
-              },
-            },
-          ],
+      expect(queryBuilder.filter).toEqual({
+        match: {
+          SubRated: 'PG2',
         },
       })
     })
@@ -108,28 +88,10 @@ describe('QueryBuilder', () => {
         .addFacetFilter('directors', ['Steven Spielberg', 'Robert Zemeckis'])
         .addFacetFilter('imdbrating', { gte: 7.5 })
 
-      expect(queryBuilderWithFacet.params.params._es_filters).toEqual({
-        bool: {
-          must: [
-            {
-              terms: {
-                'actors.enum': 'PG',
-              },
-            },
-            {
-              terms: {
-                'directors.enum': ['Steven Spielberg', 'Robert Zemeckis'],
-              },
-            },
-            {
-              range: {
-                imdbrating: {
-                  gte: 7.5,
-                },
-              },
-            },
-          ],
-        },
+      expect(queryBuilderWithFacet.facetFilters).toEqual({
+        actors: ['PG'],
+        directors: ['Steven Spielberg', 'Robert Zemeckis'],
+        imdbrating: [{ gte: 7.5 }],
       })
     })
   })
