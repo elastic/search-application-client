@@ -51,7 +51,9 @@ describe('Full integration test', () => {
                     "must": [
                       {
                         "match": {
-                          "Rated": "PG",
+                          "Rated": {
+                            "query": "PG",
+                          },
                         },
                       },
                       {
@@ -102,7 +104,9 @@ describe('Full integration test', () => {
                     "must": [
                       {
                         "match": {
-                          "Rated": "PG",
+                          "Rated": {
+                            "query": "PG",
+                          },
                         },
                       },
                       {
@@ -133,7 +137,9 @@ describe('Full integration test', () => {
     const results = await client()
       .setFilter({
         match: {
-          Rated: 'PG',
+          Rated: {
+            query: 'PG',
+          },
         },
       })
       .addFacetFilter('actors', 'Keanu Reeves')

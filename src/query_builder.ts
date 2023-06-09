@@ -1,31 +1,6 @@
 import { API } from './api'
 import { FacetConfiguration, RequestBuilder } from './request_builder'
-import { SortFields } from './types'
-
-type BaseValueFilter = string | string[] | number | number[]
-type BaseRangeFilter = {
-  gte?: number
-  lte?: number
-  gt?: number
-  lt?: number
-}
-type FilterFieldValue = BaseValueFilter | BaseRangeFilter
-type FilterMatchField = { match: { [field: string]: BaseValueFilter } }
-type FilterTermsField = { terms: { [field: string]: BaseValueFilter } }
-type FilterRangeField = { range: { [field: string]: BaseRangeFilter } }
-
-export type FilterField = FilterMatchField | FilterRangeField | FilterTermsField
-
-export interface Params {
-  _es_filters?: { bool: { must: FilterField[] } }
-  query?: string
-  result_fields?: string[]
-  search_fields?: string[]
-  size?: number
-  from?: number
-}
-
-export type FacetFilters = Record<string, FilterFieldValue[]>
+import { FilterFieldValue, Params, Query, SortFields } from './types'
 
 const transformResponse = (
   results: any[],
@@ -87,11 +62,13 @@ export class QueryBuilder {
   readonly facets: Record<string, FacetConfiguration>
   facetFilters: Record<string, FilterFieldValue[]> = {}
   sort: SortFields
-  filter: FilterField
+  filter: Query
   params: Params = {}
 
   constructor(private readonly apiClient: API, baseParams) {
-    this.facets = baseParams.facets
+    const { facets, ...rest } = baseParams
+    this.facets = facets
+    this.params = rest
   }
 
   addFacetFilter(field: string, value: FilterFieldValue): this {
@@ -109,12 +86,12 @@ export class QueryBuilder {
     return this
   }
 
-  setFilter(value: FilterField): this {
+  setFilter(value: Query): this {
     this.filter = value
     return this
   }
 
-  addParameter(parameter: string, value: string): this {
+  addParameter(parameter: string, value: unknown): this {
     this.params[parameter] = value
 
     return this

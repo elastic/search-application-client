@@ -1,5 +1,4 @@
-import type { FacetFilters, FilterField, Params } from './query_builder'
-import { SortFields } from './types'
+import { Query, SortFields, Params, FacetFilters } from './types'
 
 interface BaseFacetConfiguration {
   type: 'terms' | 'stats'
@@ -41,7 +40,7 @@ export class RequestBuilder {
   constructor(
     private readonly facetsConfiguration: FacetsConfiguration,
     private readonly facetFilters: FacetFilters,
-    private readonly filter: FilterField,
+    private readonly filter: Query,
     private readonly sort: SortFields,
     private readonly params: Params
   ) {}

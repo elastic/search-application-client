@@ -2,7 +2,7 @@ import { QueryBuilder } from '../query_builder'
 import { API } from '../api'
 
 describe('QueryBuilder', () => {
-  let queryBuilder
+  let queryBuilder: QueryBuilder
 
   beforeEach(() => {
     queryBuilder = new QueryBuilder(new API('', '', ''), {})
@@ -31,25 +31,33 @@ describe('QueryBuilder', () => {
     test('should set _es_filters when pass object', () => {
       queryBuilder.setFilter({
         match: {
-          Rated: 'PG',
+          Rated: {
+            query: 'PG',
+          },
         },
       })
 
       expect(queryBuilder.filter).toEqual({
         match: {
-          Rated: 'PG',
+          Rated: {
+            query: 'PG',
+          },
         },
       })
 
       queryBuilder.setFilter({
         match: {
-          SubRated: 'PG2',
+          SubRated: {
+            query: 'PG2',
+          },
         },
       })
 
       expect(queryBuilder.filter).toEqual({
         match: {
-          SubRated: 'PG2',
+          SubRated: {
+            query: 'PG2',
+          },
         },
       })
     })
