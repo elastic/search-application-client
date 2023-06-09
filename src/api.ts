@@ -6,13 +6,13 @@ export class API {
   constructor(
     private readonly apiKey: string,
     private readonly endpoint: string,
-    private readonly path: string
+    private readonly path: string,
+    private readonly headers: HeadersInit = {}
   ) {}
 
-  static request(
+  private request(
     method: 'POST' | 'GET',
     url: string,
-    apiKey: string,
     body?: Record<string, any>
   ) {
     const cachedQueryResult = cache.getByRequestParams(method, url, body)
@@ -23,8 +23,9 @@ export class API {
     return fetch(url, {
       method,
       headers: {
+        ...this.headers,
         'Content-Type': 'application/json',
-        Authorization: `Apikey ${apiKey}`,
+        Authorization: `Apikey ${this.apiKey}`,
       },
       body: body ? JSON.stringify(body) : undefined,
     })
@@ -50,11 +51,6 @@ export class API {
   }
 
   post(body) {
-    return API.request(
-      'POST',
-      `${this.endpoint}${this.path}`,
-      this.apiKey,
-      body
-    )
+    return this.request('POST', `${this.endpoint}${this.path}`, body)
   }
 }
