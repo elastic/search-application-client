@@ -1,7 +1,11 @@
-import type { SearchRequest } from '@elastic/elasticsearch/lib/api/types'
+import type {
+  SearchRequest,
+  AggregationsStatsAggregate as ResponseStatsAggregation,
+} from '@elastic/elasticsearch/lib/api/types'
+import { AggregationsSignificantStringTermsBucket } from '@elastic/elasticsearch/lib/api/types'
 export type {
   SearchResponse as ResponseParams,
-  AggregationsMultiTermsAggregate as ResponseTermsAggregation,
+  AggregationsSignificantStringTermsAggregate as ResponseTermsAggregation,
   AggregationsStatsAggregate as ResponseStatsAggregation,
   AggregationsAggregationContainer as Aggregations,
 } from '@elastic/elasticsearch/lib/api/types'
@@ -88,3 +92,17 @@ export type RequestParams = Pick<SearchRequest, 'from' | 'size'> & {
   query?: SearchRequest['query']['query_string']['query']
   highlight_fields?: SearchRequest['highlight']
 }
+
+export type ResponseTermsFacet = {
+  name: string
+  entries: {
+    value: AggregationsSignificantStringTermsBucket['key']
+    count: AggregationsSignificantStringTermsBucket['doc_count']
+  }[]
+}
+
+export type ResponseStatsFacet = {
+  name: string
+  stats: Pick<ResponseStatsAggregation, 'min' | 'max' | 'avg' | 'sum' | 'count'>
+}
+export type ResponseFacets = ResponseTermsFacet | ResponseStatsFacet

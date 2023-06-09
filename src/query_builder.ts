@@ -1,16 +1,20 @@
 import { API } from './api'
 import { FacetConfiguration, RequestBuilder } from './request_builder'
-import type { FilterFieldValue, Params, Query, SortFields } from './types'
-import {
+import type {
+  FilterFieldValue,
+  Params,
+  Query,
+  SortFields,
   ResponseParams,
   ResponseTermsAggregation,
   ResponseStatsAggregation,
+  ResponseFacets,
 } from './types'
 
 const transformResponse = <T extends ResponseParams = ResponseParams>(
   results: T[],
   facetConfigurations: Record<string, FacetConfiguration>
-) => {
+): T & { facets?: ResponseFacets[] } => {
   const combinedAggregations = results.reduce((acc, result) => {
     return {
       ...acc,
@@ -18,7 +22,7 @@ const transformResponse = <T extends ResponseParams = ResponseParams>(
     }
   }, {})
 
-  const facets = Object.keys(combinedAggregations).reduce(
+  const facets = Object.keys(combinedAggregations).reduce<ResponseFacets[]>(
     (facets, facetName) => {
       const facetConfiguration =
         facetConfigurations[facetName.replace('_facet', '')]
@@ -27,6 +31,7 @@ const transformResponse = <T extends ResponseParams = ResponseParams>(
       const aggregation = combinedAggregations[facetName]
       if (facetConfiguration.type === 'terms') {
         const { buckets } = aggregation as ResponseTermsAggregation
+
         return [
           ...facets,
           {
@@ -121,7 +126,7 @@ export class QueryBuilder {
     return this
   }
 
-  async search<Result = unknown>(): Promise<ResponseParams<Result>> {
+  async search<Result = unknown>() {
     const requests = new RequestBuilder(
       this.facets,
       this.facetFilters,
