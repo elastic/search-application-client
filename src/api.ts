@@ -7,7 +7,8 @@ export class API {
     private readonly apiKey: string,
     private readonly endpoint: string,
     private readonly path: string,
-    private readonly headers: HeadersInit = {}
+    private readonly headers: HeadersInit = {},
+    private readonly disableCaching: boolean = false
   ) {}
 
   private request(
@@ -15,7 +16,8 @@ export class API {
     url: string,
     body?: Record<string, any>
   ) {
-    const cachedQueryResult = cache.getByRequestParams(method, url, body)
+    const cachedQueryResult =
+      !this.disableCaching && cache.getByRequestParams(method, url, body)
     if (cachedQueryResult) {
       return Promise.resolve(cachedQueryResult)
     }
@@ -41,7 +43,9 @@ export class API {
           throw new Error(error)
         }
 
-        cache.setByRequestParams(method, url, body, result)
+        if (!this.disableCaching) {
+          cache.setByRequestParams(method, url, body, result)
+        }
 
         return result
       })
