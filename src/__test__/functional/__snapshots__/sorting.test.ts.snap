@@ -1,0 +1,3 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Sorting should send sorting parameter: Response with results 1`] = `undefined`;
