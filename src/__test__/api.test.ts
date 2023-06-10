@@ -1,4 +1,5 @@
 import { API } from '../api'
+import { RequestParams } from '../types'
 
 describe('API', () => {
   const apiKey = 'YOUR_API_KEY'
@@ -26,7 +27,7 @@ describe('API', () => {
 
       const method = 'POST'
       const url = `${endpoint}${path}`
-      const body = { param: 'value' }
+      const body = { params: 'value' as RequestParams }
 
       const result = await api['request'](method, url, body)
 
@@ -115,7 +116,7 @@ describe('API', () => {
         .spyOn(api as any, 'request')
         .mockResolvedValueOnce(mockResponse)
 
-      const body = { param: 'value' }
+      const body = { params: 'value' as RequestParams }
 
       const result = await api.post(body)
 
