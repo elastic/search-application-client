@@ -28,6 +28,6 @@ describe('Sorting', () => {
       .query('test')
       .search()
 
-    expect(results.response).toMatchSnapshot('Response with results')
+    expect(results['response']).toMatchSnapshot('Response with results')
   })
 })

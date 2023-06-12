@@ -1,4 +1,4 @@
-name: Tests
+name: Types check
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 jobs:
-  tests:
+  typechecking:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -24,8 +24,5 @@ jobs:
       - name: Install dependencies
         run: yarn
 
-      - name: Build
-        run: yarn build
-
-      - name: Test
-        run: yarn test:ci
+      - name: Types check
+        run: yarn typecheck

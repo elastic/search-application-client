@@ -1,4 +1,5 @@
 import { Cache } from './cache'
+import { RequestParams } from './types'
 
 const cache = new Cache()
 
@@ -14,7 +15,7 @@ export class API {
   private request(
     method: 'POST' | 'GET',
     url: string,
-    body?: Record<string, any>
+    body?: { params: RequestParams }
   ) {
     const cachedQueryResult =
       !this.disableCaching && cache.getByRequestParams(method, url, body)
@@ -54,7 +55,7 @@ export class API {
       })
   }
 
-  post(body) {
+  post(body: { params: RequestParams }) {
     return this.request('POST', `${this.endpoint}${this.path}`, body)
   }
 }

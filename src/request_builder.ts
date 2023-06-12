@@ -1,4 +1,11 @@
-import { Query, SortFields, Params, FacetFilters } from './types'
+import {
+  Aggregations,
+  FacetFilters,
+  Params,
+  Query,
+  RequestParams,
+  SortFields,
+} from './types'
 
 interface BaseFacetConfiguration {
   type: 'terms' | 'stats'
@@ -23,14 +30,18 @@ interface FacetsConfiguration {
   [facetName: string]: FacetConfiguration
 }
 
-const TermsAggregation = (facetConfiguration: TermsFacetConfiguration) => ({
+const TermsAggregation = (
+  facetConfiguration: TermsFacetConfiguration
+): Pick<Aggregations, 'terms'> => ({
   terms: {
     field: facetConfiguration.field,
     size: facetConfiguration.size,
   },
 })
 
-const StatsAggregation = (facetConfiguration: StatsFacetConfiguration) => ({
+const StatsAggregation = (
+  facetConfiguration: StatsFacetConfiguration
+): Pick<Aggregations, 'stats'> => ({
   stats: {
     field: facetConfiguration.field,
   },
@@ -45,7 +56,7 @@ export class RequestBuilder {
     private readonly params: Params
   ) {}
 
-  build() {
+  build(): RequestParams[] {
     const facetRequests = Object.keys(this.facetsConfiguration).reduce<
       string[][]
     >(
@@ -64,22 +75,25 @@ export class RequestBuilder {
       [[]]
     )
 
-    const aggRequests = facetRequests.reduce<any[]>((acc, facetNames, i) => {
+    return facetRequests.reduce<RequestParams[]>((acc, facetNames, i) => {
       const initialRequest = i === 0
 
-      const aggs = facetNames.reduce((acc, facetName) => {
-        const facetConfiguration = this.facetsConfiguration[facetName]
+      const aggs = facetNames.reduce<Record<string, Aggregations>>(
+        (acc, facetName) => {
+          const facetConfiguration = this.facetsConfiguration[facetName]
 
-        const aggregation =
-          facetConfiguration.type === 'terms'
-            ? TermsAggregation(facetConfiguration)
-            : StatsAggregation(facetConfiguration)
+          const aggregation =
+            facetConfiguration.type === 'terms'
+              ? TermsAggregation(facetConfiguration)
+              : StatsAggregation(facetConfiguration)
 
-        return {
-          ...acc,
-          [`${facetName}_facet`]: aggregation,
-        }
-      }, [])
+          return {
+            ...acc,
+            [`${facetName}_facet`]: aggregation,
+          }
+        },
+        {}
+      )
 
       const filters = Object.keys(this.facetsConfiguration).reduce(
         (acc, facetName) => {
@@ -114,7 +128,5 @@ export class RequestBuilder {
       })
       return acc
     }, [])
-
-    return aggRequests
   }
 }
