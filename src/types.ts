@@ -1,3 +1,15 @@
+import type {
+  SearchRequest,
+  AggregationsStatsAggregate as ResponseStatsAggregation,
+} from '@elastic/elasticsearch/lib/api/types'
+import { AggregationsSignificantStringTermsBucket } from '@elastic/elasticsearch/lib/api/types'
+export type {
+  SearchResponse as ResponseParams,
+  AggregationsSignificantStringTermsAggregate as ResponseTermsAggregation,
+  AggregationsStatsAggregate as ResponseStatsAggregation,
+  AggregationsAggregationContainer as Aggregations,
+} from '@elastic/elasticsearch/lib/api/types'
+
 export type BaseValueFilter = string | string[] | number | number[]
 export type BaseRangeFilter = {
   gte?: number
@@ -72,3 +84,25 @@ export type GeoDistanceQuery = {
     lon: number
   }
 >
+
+export type RequestParams = Pick<SearchRequest, 'from' | 'size'> & {
+  _es_aggs?: SearchRequest['aggs']
+  _es_filters?: SearchRequest['query']['bool']['filter']
+  _es_sort_fields?: SearchRequest['sort']
+  query?: SearchRequest['query']['query_string']['query']
+  highlight_fields?: SearchRequest['highlight']
+}
+
+export type ResponseTermsFacet = {
+  name: string
+  entries: {
+    value: AggregationsSignificantStringTermsBucket['key']
+    count: AggregationsSignificantStringTermsBucket['doc_count']
+  }[]
+}
+
+export type ResponseStatsFacet = {
+  name: string
+  stats: Pick<ResponseStatsAggregation, 'min' | 'max' | 'avg' | 'sum' | 'count'>
+}
+export type ResponseFacets = ResponseTermsFacet | ResponseStatsFacet
