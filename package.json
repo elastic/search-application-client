@@ -3,27 +3,35 @@
   "version": "1.0.0",
   "description": "A Search Application Client for Elasticsearch",
   "license": "Apache-2.0",
-  "main": "lib/index.js",
-  "module": "lib/index.js",
-  "types": "lib/index.d.ts",
-  "directories": {
-    "lib": "lib",
-    "test": "__tests__"
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "jsdelivr": "dist/index.global.js",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./package": "./package.json",
+    "./package.json": "./package.json"
   },
   "files": [
-    "lib"
+    "dist"
   ],
   "scripts": {
     "format": "prettier --ignore-unknown --ignore-path .gitignore .",
     "format:write": "yarn format --write",
-    "lint": "eslint --ext *.ts,*.tsx,*.js,*.jsx --ignore-pattern '**/node_modules/**' --ignore-pattern '**/lib/**'",
-    "test-ci": "jest --runInBand",
+    "lint": "eslint --ext *.ts,*.tsx,*.js,*.jsx --ignore-pattern '**/node_modules/**' --ignore-pattern '**/dist/**' --ignore-pattern '**/build/**'",
+    "typecheck": "tsc --noEmit",
+    "test:ci": "jest --runInBand",
     "test": "jest",
-    "clean": "rimraf lib",
-    "build": "tsc",
-    "watch": "tsc --watch",
+    "build": "tsup --minify",
+    "watch": "tsup --watch",
     "prepare": "husky install",
-    "prepublish": "yarn build",
+    "prepublish": "yarn typecheck && yarn lint && yarn test && yarn build",
+    "changeset": "changeset",
+    "publish": "changeset version && changeset publish",
     "publish::local": "yarn build && cd examples/sandbox && rm -rf node_modules/@elastic/search-app-client && yarn add file:../../"
   },
   "devDependencies": {
@@ -41,10 +49,12 @@
     "lint-staged": "^13.2.2",
     "prettier": "^2.8.8",
     "ts-jest": "^29.1.0",
+    "tsup": "^6.7.0",
     "typescript": "^5.0.4"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": "yarn lint",
+    "*.{ts,tsx}": "yarn typecheck",
     "**/*": "yarn format"
   },
   "publishConfig": {
@@ -52,6 +62,7 @@
     "registry": "https://registry.npmjs.org/"
   },
   "dependencies": {
+    "@changesets/cli": "^2.26.1",
     "@elastic/elasticsearch": "^8.8.0",
     "cross-fetch": "^3.1.6",
     "nock": "^13.3.1"
