@@ -24,8 +24,8 @@ const transformResponse = <T extends ResponseParams = ResponseParams>(
 
   const facets = Object.keys(combinedAggregations).reduce<ResponseFacets[]>(
     (facets, facetName) => {
-      const facetConfiguration =
-        facetConfigurations[facetName.replace('_facet', '')]
+      const key = facetName.replace('_facet', '')
+      const facetConfiguration = facetConfigurations[key]
       if (!facetConfiguration) return facets
 
       const aggregation = combinedAggregations[facetName]
@@ -35,7 +35,7 @@ const transformResponse = <T extends ResponseParams = ResponseParams>(
         return [
           ...facets,
           {
-            name: facetName,
+            name: key,
             entries: (Array.isArray(buckets)
               ? buckets
               : Object.values(buckets)
@@ -54,7 +54,7 @@ const transformResponse = <T extends ResponseParams = ResponseParams>(
         return [
           ...facets,
           {
-            name: facetName,
+            name: key,
             stats: {
               min,
               max,
@@ -69,8 +69,22 @@ const transformResponse = <T extends ResponseParams = ResponseParams>(
     []
   )
 
+  const userSpecifiedAggs = Object.keys(results[0].aggregations).reduce(
+    (acc, aggregationKey) => {
+      if (!facetConfigurations[aggregationKey.replace('_facet', '')]) {
+        return {
+          ...acc,
+          [aggregationKey]: results[0].aggregations[aggregationKey],
+        }
+      }
+      return acc
+    },
+    {}
+  )
+
   return {
     ...results[0],
+    aggregations: userSpecifiedAggs,
     facets,
   }
 }

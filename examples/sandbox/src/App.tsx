@@ -1,87 +1,150 @@
-import React, { useState } from 'react'
-import SearchAppClient from '@elastic/search-app-client'
+import React, { useEffect, useState } from 'react'
+import Client from '@elastic/search-application-client'
 import './App.css'
-import { IQueryBuilder } from '@elastic/search-app-client/lib/query_builder'
 
-// SearchAppClient.init({
-//     apiKey: 'amNxUWZJZ0J3S3pRbkpkdVdHSFQ6S0txSWVHMzVRWkdCemlMaTVmdDd4UQ==',
-//     endpoint:
-//         'https://search-ui-testing.es.us-west2.gcp.elastic-cloud.com' ||
-//         'http://localhost:9200',
-// })
+const request = Client("movies", "https://d1bd36862ce54c7b903e2aacd4cd7f0a.us-east4.gcp.elastic-cloud.com:443", "UnlMRm9JZ0J5TkZrbW41RWN0Mm06YkxvXzJ1Zl9TcXlyTU4yMDl4YTZKdw==", {
+  facets: {
+    "actors": {
+      "type": "terms",
+      "size": 10,
+      "field": "actors.keyword"
+    },
+    "directors": {
+      type: "terms",
+      field: "directors.keyword",
+      size: 20,
+      disjunctive: true
+    },
+    "imdbrating": {
+      type: "stats",
+      field: "imdbrating"
+    }
+  }
+})
 
-let request: () => IQueryBuilder
+function Facets({facets, addFilter, removeFilter, filters}: any) {
+  if (!facets) {
+    return null
+  }
+  return (
+    <div className="md:w-1/4 bg-gray-100 p-4">
+      {facets && facets.map((facet: any) => {
+        if (facet.name === "imdbrating") {
+          return (
+            <div key={facet.name} className="pb-4" >
+              <h3 className="text-base font-semibold mb-2 uppercase">{facet.name}</h3>
+              <a>Min: {facet.stats.min} Max: {facet.stats.max}</a>
+            </div>
+          )
+        }
+        return (
+          <div key={facet.name} className="pb-4">
+            <h3 className="text-base font-semibold mb-2 uppercase">{facet.name}</h3>
+            {facet.entries.map((bucket: any) => {
+              const isSelected = filters[facet.name] && filters[facet.name].includes(bucket.value)
+              return (
+                <ul key={bucket.value}>
+                  <li className={`pb-0.5 cursor-pointer ${isSelected ? "font-semibold" : ""}`} onClick={() => {
+                    if (!isSelected) {
+                      addFilter(facet.name, bucket.value);
+                    } else {
+                      removeFilter(facet.name, bucket.value);
+                    }
+                  }}>{bucket.value} ({bucket.count})</li>
+                </ul>
+              )
+            })}
+          </div>
+        )
+      })}
+    </div>
+  )
+}
 
 function App() {
-  const [target, setTarget] = useState<string>('')
-  const [apiKey, setApiKey] = useState<string>(
-    'b0s2NGk0Z0ItS3hPNEcyQ041cDM6Vmd1UC1Jem9UV0NoMk1ldkhmeXNkQQ=='
-  )
-  const [applicationName, setApplicationName] = useState<string>(
-    'search_application/movies'
-  )
-  const [endpoint, setEndpoint] = useState<string>(
-    'https://fce4152b85df49e0a522c132ad0c2911.us-central1.gcp.cloud.es.io'
-  )
-  const handleInit = () => {
-    request = SearchAppClient(applicationName, endpoint, apiKey, {})
-    console.log('client init')
-    // @ts-ignore
-    window.client = request
-  }
-  const handleSearch = async () => {
-    let query = request()
 
-    if (target) {
-      query.query(target)
+  const [query, setQuery] = useState('')
+  const [page, setPage] = useState(1)
+  const [results, setResults] = useState<any>(null)
+  const [filters, setFilters] = useState<any>({})
+
+  const doSearch = async () => {
+    const r = request()
+    .setSort(["_score"])
+    .query(query)
+    .addParameter("from", (page - 1) * 12)
+    .addParameter("size", 12)
+
+    for (const [key, value] of Object.entries(filters)) {
+      r.addFacetFilter(key, value as string)
     }
-    const results = await query.search()
 
-    console.log('results', results)
+    const results = await r.search()
+    
+    setResults(results)
   }
+
+  const handleSearch = async (e: any) => {
+    e.preventDefault();
+    setPage(1)
+    doSearch()
+  }
+
+  useEffect(() => {
+    doSearch();
+  }, [filters, page])
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <h3>1. Initialize the client with your credentials and endpoint</h3>
-        <p>
-          const request = SearchAppClient(
-          <input
-            name="applicationName"
-            placeholder="Application Name"
-            value={applicationName}
-            onChange={(e) => setApplicationName(e.target.value)}
-          />
-          <input
-            name="endpoint"
-            placeholder="Endpoint"
-            value={endpoint}
-            onChange={(e) => setEndpoint(e.target.value)}
-          />
-          <input
-            name="apiKey"
-            placeholder="API Key"
-            value={apiKey}
-            onChange={(e) => setApiKey(e.target.value)}
-          />
-          )
-        </p>
-        <button onClick={handleInit}>Init client</button>
+  <div className="flex flex-col md:flex-row">
+    <Facets 
+      facets={results && results.facets}
+      filters={filters}
+      addFilter={(filter:any, value: any) => {
+        const existingFilters = filters[filter] || []
+        setFilters({
+          ...filters,
+          [filter]: [...existingFilters, value]
+        })
+        setPage(1)
+      }} 
+      removeFilter={(filter: any, value: any) => {
+        const existingFilters = filters[filter] || []
+        setFilters({
+          ...filters,
+          [filter]: existingFilters.filter((v: any) => v !== value)
+        })
+        setPage(1)
+      }}
+      />
 
-        <h3>2. Make request</h3>
-        <p>
-          request().query("
-          <input
-            placeholder="Target Path"
-            value={target}
-            onChange={(e) => setTarget(e.target.value)}
-          />
-          ").
-          <button name="search" onClick={handleSearch}>
-            search()
-          </button>
-        </p>
-      </header>
+    <div className="md:w-3/4 p-4">
+
+      <form onSubmit={handleSearch} className="w-full mb-4 flex space-x-2">
+        <input placeholder="search" className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500" type="text" onChange={(e)=> {
+          e.preventDefault()
+          setQuery(e.target.value)
+        }}/>
+        <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded-md">Search</button>
+
+      </form>
+      <div className="mt-4">
+        <p className="text-gray-500">{results?.hits?.total?.value} Results</p>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {results && results.hits.hits.map((hit: any) => {
+          return (
+            <div key={hit._id} className="bg-white rounded-lg shadow-md p-4" >
+              <img src={hit._source.poster} alt={hit._source.title} className="mb-2 rounded-lg" />
+              <h3 className="text-lg font-semibold">{hit._source.title}</h3>
+              <p>{hit._source.plot}</p>
+            </div>
+          )
+        })}
+      </div>
+      <div className="mt-4 flex justify-center">
+        <button className="bg-blue-500 text-white px-4 py-2 rounded-md" onClick={() => setPage(page+1)}>Next Page</button>
+      </div>
+    </div>
     </div>
   )
 }

@@ -37,11 +37,15 @@ describe('QueryBuilder', () => {
         },
       })
 
+      queryBuilder.setFilter({
+        term: {
+          'Rated.keyword': 'PG',
+        },
+      })
+
       expect(queryBuilder.filter).toEqual({
-        match: {
-          Rated: {
-            query: 'PG',
-          },
+        term: {
+          'Rated.keyword': 'PG',
         },
       })
 
