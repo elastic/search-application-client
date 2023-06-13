@@ -353,6 +353,13 @@ export const ALL_RESULTS = {
     ],
   },
   aggregations: {
+    my_custom_agg: {
+      count: 9,
+      min: 1986,
+      max: 2008,
+      avg: 1995.7777777777778,
+      sum: 17962,
+    },
     year_facet: {
       count: 9,
       min: 1986,

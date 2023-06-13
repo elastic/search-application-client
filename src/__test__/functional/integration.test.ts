@@ -147,7 +147,6 @@ describe('Full integration test', () => {
       .query('test')
       .search()
 
-    expect(results.response).toMatchSnapshot('Response with results')
-    expect(results.facets).toMatchSnapshot('Response with facets')
+    expect(results).toMatchSnapshot('Response with results')
   })
 })
