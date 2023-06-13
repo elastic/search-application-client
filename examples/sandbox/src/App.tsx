@@ -2,25 +2,30 @@ import React, { useEffect, useState } from 'react'
 import Client from '@elastic/search-application-client'
 import './App.css'
 
-const request = Client("movies", "https://d1bd36862ce54c7b903e2aacd4cd7f0a.us-east4.gcp.elastic-cloud.com:443", "UnlMRm9JZ0J5TkZrbW41RWN0Mm06YkxvXzJ1Zl9TcXlyTU4yMDl4YTZKdw==", {
-  facets: {
-    "actors": {
-      "type": "terms",
-      "size": 10,
-      "field": "actors.keyword"
-    },
-    "directors": {
-      type: "terms",
-      field: "directors.keyword",
-      size: 20,
-      disjunctive: true
-    },
-    "imdbrating": {
-      type: "stats",
-      field: "imdbrating"
+const request = Client(
+  "movies", 
+  "https://d1bd36862ce54c7b903e2aacd4cd7f0a.us-east4.gcp.elastic-cloud.com:443",
+  "UnlMRm9JZ0J5TkZrbW41RWN0Mm06YkxvXzJ1Zl9TcXlyTU4yMDl4YTZKdw==", 
+  {
+    facets: {
+      actors: {
+        "type": "terms",
+        "size": 10,
+        "field": "actors.keyword"
+      },
+      directors: {
+        type: "terms",
+        field: "directors.keyword",
+        size: 10,
+        disjunctive: true
+      },
+      imdbrating: {
+        type: "stats",
+        field: "imdbrating"
+      }
     }
   }
-})
+)
 
 function Facets({facets, addFilter, removeFilter, filters}: any) {
   if (!facets) {
@@ -33,7 +38,7 @@ function Facets({facets, addFilter, removeFilter, filters}: any) {
           return (
             <div key={facet.name} className="pb-4" >
               <h3 className="text-base font-semibold mb-2 uppercase">{facet.name}</h3>
-              <a>Min: {facet.stats.min} Max: {facet.stats.max}</a>
+              <p>Min: {facet.stats.min} Max: {facet.stats.max}</p>
             </div>
           )
         }
@@ -74,6 +79,7 @@ function App() {
     .query(query)
     .addParameter("from", (page - 1) * 12)
     .addParameter("size", 12)
+    .addParameter("custom-parameter", "custom-value")
 
     for (const [key, value] of Object.entries(filters)) {
       r.addFacetFilter(key, value as string)
@@ -134,7 +140,7 @@ function App() {
         {results && results.hits.hits.map((hit: any) => {
           return (
             <div key={hit._id} className="bg-white rounded-lg shadow-md p-4" >
-              <img src={hit._source.poster} alt={hit._source.title} className="mb-2 rounded-lg" />
+              <img src={hit._source.poster} alt={hit._source.title} className="mb-4 rounded-lg" />
               <h3 className="text-lg font-semibold">{hit._source.title}</h3>
               <p>{hit._source.plot}</p>
             </div>
