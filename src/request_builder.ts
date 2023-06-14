@@ -6,6 +6,7 @@ import {
   RequestParams,
   SortFields,
 } from './types'
+import dictionary from './request_schema.json'
 
 interface BaseFacetConfiguration {
   type: 'terms' | 'stats'
@@ -125,6 +126,7 @@ export class RequestBuilder {
         ...(this.sort ? { _es_sort_fields: this.sort } : {}),
         ...this.params,
         ...(initialRequest ? {} : { size: 0, from: 0 }),
+        dictionary,
       })
       return acc
     }, [])

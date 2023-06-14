@@ -30,56 +30,53 @@ describe('Full integration test', () => {
       .post(
         '/_application/search_application/test/_search',
         (requestBody: any) => {
-          expect(requestBody).toMatchInlineSnapshot(`
-            {
-              "params": {
-                "_es_aggs": {
-                  "directors_facet": {
-                    "terms": {
-                      "field": "directors.enum",
-                      "size": 10,
-                    },
-                  },
-                  "year_facet": {
-                    "stats": {
-                      "field": "year",
-                    },
+          expect(requestBody).toMatchSnapshot({
+            params: {
+              _es_aggs: {
+                directors_facet: {
+                  terms: {
+                    field: 'directors.enum',
+                    size: 10,
                   },
                 },
-                "_es_filters": {
-                  "bool": {
-                    "must": [
-                      {
-                        "match": {
-                          "Rated": {
-                            "query": "PG",
-                          },
-                        },
-                      },
-                      {
-                        "terms": {
-                          "actors.enum": [
-                            "Keanu Reeves",
-                          ],
-                        },
-                      },
-                      {
-                        "range": {
-                          "year": [
-                            {
-                              "gte": 1990,
-                              "lte": 2200,
-                            },
-                          ],
-                        },
-                      },
-                    ],
+                year_facet: {
+                  stats: {
+                    field: 'year',
                   },
                 },
-                "query": "test",
               },
-            }
-          `)
+              _es_filters: {
+                bool: {
+                  must: [
+                    {
+                      match: {
+                        Rated: {
+                          query: 'PG',
+                        },
+                      },
+                    },
+                    {
+                      terms: {
+                        'actors.enum': ['Keanu Reeves'],
+                      },
+                    },
+                    {
+                      range: {
+                        year: [
+                          {
+                            gte: 1990,
+                            lte: 2200,
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                },
+              },
+              dictionary: expect.any(Object),
+              query: 'test',
+            },
+          })
           return true
         }
       )
@@ -88,46 +85,45 @@ describe('Full integration test', () => {
       .post(
         '/_application/search_application/test/_search',
         (requestBody: any) => {
-          expect(requestBody).toMatchInlineSnapshot(`
-            {
-              "params": {
-                "_es_aggs": {
-                  "actors_facet": {
-                    "terms": {
-                      "field": "actors.enum",
-                      "size": 10,
-                    },
+          expect(requestBody).toMatchSnapshot({
+            params: {
+              _es_aggs: {
+                actors_facet: {
+                  terms: {
+                    field: 'actors.enum',
+                    size: 10,
                   },
                 },
-                "_es_filters": {
-                  "bool": {
-                    "must": [
-                      {
-                        "match": {
-                          "Rated": {
-                            "query": "PG",
-                          },
-                        },
-                      },
-                      {
-                        "range": {
-                          "year": [
-                            {
-                              "gte": 1990,
-                              "lte": 2200,
-                            },
-                          ],
-                        },
-                      },
-                    ],
-                  },
-                },
-                "from": 0,
-                "query": "test",
-                "size": 0,
               },
-            }
-          `)
+              _es_filters: {
+                bool: {
+                  must: [
+                    {
+                      match: {
+                        Rated: {
+                          query: 'PG',
+                        },
+                      },
+                    },
+                    {
+                      range: {
+                        year: [
+                          {
+                            gte: 1990,
+                            lte: 2200,
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                },
+              },
+              from: 0,
+              query: 'test',
+              size: 0,
+              dictionary: expect.any(Object),
+            },
+          })
           return true
         }
       )

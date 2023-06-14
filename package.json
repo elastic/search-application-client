@@ -32,7 +32,7 @@
     "prepublish": "yarn typecheck && yarn lint && yarn test && yarn build",
     "changeset": "changeset",
     "publish": "changeset version && changeset publish",
-    "publish::local": "yarn build && cd examples/sandbox && rm -rf node_modules/@elastic/search-app-client && yarn add file:../../"
+    "publish::local": "yarn build && cd examples/sandbox && rm -rf node_modules/@elastic/search-application-client && yarn add file:../../"
   },
   "devDependencies": {
     "@types/jest": "^29.5.1",

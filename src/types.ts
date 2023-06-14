@@ -3,11 +3,12 @@ import type {
   AggregationsStatsAggregate as ResponseStatsAggregation,
 } from '@elastic/elasticsearch/lib/api/types'
 import { AggregationsSignificantStringTermsBucket } from '@elastic/elasticsearch/lib/api/types'
+
 export type {
   SearchResponse as ResponseParams,
   AggregationsSignificantStringTermsAggregate as ResponseTermsAggregation,
   AggregationsStatsAggregate as ResponseStatsAggregation,
-  AggregationsAggregationContainer as Aggregations,
+  AggregationsAggregationContainer,
 } from '@elastic/elasticsearch/lib/api/types'
 
 export type BaseValueFilter = string | string[] | number | number[]
@@ -54,6 +55,7 @@ export type NestedQuery = {
 }
 
 export type Query = {
+  bool?: BoolQuery
   match?: MatchQuery
   term?: TermQuery
   range?: RangeQuery
@@ -75,22 +77,31 @@ export type GeoBoundingBoxQuery = {
   }
 }
 
-export type GeoDistanceQuery = {
-  distance: string
-} & Record<
-  string,
-  {
+export type GeoDistanceQuery = { distance: string } & {
+  [field: string]: {
     lat: number
     lon: number
   }
->
+}
 
-export type RequestParams = Pick<SearchRequest, 'from' | 'size'> & {
-  _es_aggs?: SearchRequest['aggs']
-  _es_filters?: SearchRequest['query']['bool']['filter']
-  _es_sort_fields?: SearchRequest['sort']
+export type Aggregations = {
+  stats?: {
+    field: SearchRequest['aggs'][string]['stats']['field']
+  }
+  terms?: {
+    field: SearchRequest['aggs'][string]['terms']['field']
+    order?: SearchRequest['aggs'][string]['terms']['order']
+    size?: SearchRequest['aggs'][string]['terms']['size']
+  }
+}
+
+export type RequestParams = {
+  _es_aggs?: { [name: string]: Aggregations }
+  _es_filters?: Query
+  _es_sort_fields?: SortFields
   query?: SearchRequest['query']['query_string']['query']
   highlight_fields?: SearchRequest['highlight']
+  dictionary?: Record<string, unknown>
 }
 
 export type ResponseTermsFacet = {
