@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import Client from '@elastic/search-application-client'
+import SearchApplicationClient from '@elastic/search-application-client'
 import './App.css'
 
-const request = Client(
+const request = SearchApplicationClient(
   'movies',
   'https://d1bd36862ce54c7b903e2aacd4cd7f0a.us-east4.gcp.elastic-cloud.com:443',
   'UnlMRm9JZ0J5TkZrbW41RWN0Mm06YkxvXzJ1Zl9TcXlyTU4yMDl4YTZKdw==',
