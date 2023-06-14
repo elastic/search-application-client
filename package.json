@@ -54,7 +54,7 @@
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": "yarn lint",
-    "*.{ts,tsx}": "yarn typecheck --resolveJsonModule --esModuleInterop",
+    "src/**/*.{ts,tsx}": "yarn typecheck --resolveJsonModule --esModuleInterop",
     "**/*": "yarn format"
   },
   "publishConfig": {
