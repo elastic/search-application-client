@@ -98,5 +98,5 @@ Please refer to the code and type definitions for more details on the available 
 
 ## <a id="examples">Examples</a>
 
-You can find usage examples in the [examples/sandbox](./examples/sandbox) directory of this repository. These examples demonstrate how to use the search-application-client library.
+You can find usage examples in the [examples/sandbox](./examples/sandbox/README.md) directory of this repository. These examples demonstrate how to use the search-application-client library.
 
