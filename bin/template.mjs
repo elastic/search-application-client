@@ -2,13 +2,16 @@ import ora from 'ora'
 import inquirer from 'inquirer'
 import chalk from 'chalk'
 import fetch from 'cross-fetch'
+import { createRequire } from 'module'
+const require = createRequire(import.meta.url)
+const dictionary = require('./request_schema.json')
+
 const AUTH_METHOD = {
   APIKey: 'API Key',
   Cred: 'credentials',
 }
 
-const data = JSON.stringify({
-  indices: ['search-movies'],
+const data = {
   template: {
     script: {
       lang: 'mustache',
@@ -42,262 +45,9 @@ const data = JSON.stringify({
         size: 10,
       },
     },
-    dictionary: {
-      $schema: 'http://json-schema.org/draft-07/schema#',
-      definitions: {
-        AggregationsAggregateOrder: {
-          anyOf: [
-            {
-              $ref: '#/definitions/Partial<Record<string,SortOrder>>',
-            },
-            {
-              items: {
-                $ref: '#/definitions/Partial<Record<string,SortOrder>>',
-              },
-              type: 'array',
-            },
-          ],
-        },
-        BaseQueryValue: {
-          type: ['string', 'number', 'boolean'],
-        },
-        BoolQuery: {
-          properties: {
-            filter: {
-              items: {
-                $ref: '#/definitions/Query',
-              },
-              type: 'array',
-            },
-            must: {
-              items: {
-                $ref: '#/definitions/Query',
-              },
-              type: 'array',
-            },
-            must_not: {
-              items: {
-                $ref: '#/definitions/Query',
-              },
-              type: 'array',
-            },
-            should: {
-              items: {
-                $ref: '#/definitions/Query',
-              },
-              type: 'array',
-            },
-          },
-          minProperties: 1,
-          additionalProperties: false,
-          type: 'object',
-        },
-        GeoDistanceQuery: {
-          allOf: [
-            {
-              properties: {
-                distance: {
-                  type: 'string',
-                },
-              },
-              required: ['distance'],
-              additionalProperties: false,
-              type: 'object',
-            },
-            {
-              additionalProperties: {
-                properties: {
-                  lat: {
-                    type: 'number',
-                  },
-                  lon: {
-                    type: 'number',
-                  },
-                },
-                required: ['lat', 'lon'],
-                additionalProperties: false,
-                type: 'object',
-              },
-              type: 'object',
-            },
-          ],
-        },
-        'Partial<Record<string,SortOrder>>': {
-          additionalProperties: {
-            enum: ['asc', 'desc'],
-            type: 'string',
-          },
-          type: 'object',
-        },
-        Query: {
-          properties: {
-            bool: {
-              $ref: '#/definitions/BoolQuery',
-            },
-            geo_bounding_box: {
-              additionalProperties: {
-                properties: {
-                  bottom_right: {
-                    properties: {
-                      lat: {
-                        type: 'number',
-                      },
-                      lon: {
-                        type: 'number',
-                      },
-                    },
-                    required: ['lat', 'lon'],
-                    additionalProperties: false,
-                    type: 'object',
-                  },
-                  top_left: {
-                    properties: {
-                      lat: {
-                        type: 'number',
-                      },
-                      lon: {
-                        type: 'number',
-                      },
-                    },
-                    required: ['lat', 'lon'],
-                    additionalProperties: false,
-                    type: 'object',
-                  },
-                },
-                required: ['bottom_right', 'top_left'],
-                additionalProperties: false,
-                type: 'object',
-              },
-              type: 'object',
-            },
-            geo_distance: {
-              $ref: '#/definitions/GeoDistanceQuery',
-            },
-            match: {
-              additionalProperties: {
-                properties: {
-                  query: {
-                    $ref: '#/definitions/BaseQueryValue',
-                  },
-                },
-                required: ['query'],
-                additionalProperties: false,
-                type: 'object',
-              },
-              type: 'object',
-            },
-            nested: {
-              properties: {
-                path: {
-                  type: 'string',
-                },
-                query: {
-                  $ref: '#/definitions/Query',
-                },
-              },
-              required: ['path', 'query'],
-              additionalProperties: false,
-              type: 'object',
-            },
-            range: {
-              additionalProperties: {
-                properties: {
-                  gt: {
-                    type: 'number',
-                  },
-                  gte: {
-                    type: 'number',
-                  },
-                  lt: {
-                    type: 'number',
-                  },
-                  lte: {
-                    type: 'number',
-                  },
-                },
-                minProperties: 1,
-                additionalProperties: false,
-                type: 'object',
-              },
-              type: 'object',
-            },
-            term: {
-              additionalProperties: {
-                $ref: '#/definitions/BaseQueryValue',
-              },
-              type: 'object',
-            },
-          },
-          additionalProperties: false,
-          type: 'object',
-        },
-      },
-      properties: {
-        _es_aggs: {
-          patternProperties: {
-            _facet$: {
-              properties: {
-                stats: {
-                  properties: {
-                    field: {
-                      type: 'string',
-                    },
-                  },
-                  required: ['field'],
-                  additionalProperties: false,
-                  type: 'object',
-                },
-                terms: {
-                  properties: {
-                    field: {
-                      type: 'string',
-                    },
-                    order: {
-                      $ref: '#/definitions/AggregationsAggregateOrder',
-                    },
-                    size: {
-                      type: 'number',
-                    },
-                  },
-                  required: ['field'],
-                  additionalProperties: false,
-                  type: 'object',
-                },
-              },
-              minProperties: 1,
-              additionalProperties: false,
-              type: 'object',
-            },
-          },
-          additionalProperties: false,
-          type: 'object',
-        },
-        _es_filters: {
-          $ref: '#/definitions/Query',
-        },
-        _es_sort_fields: {
-          items: {
-            anyOf: [
-              {
-                additionalProperties: {
-                  enum: ['asc', 'desc'],
-                  type: 'string',
-                },
-                type: 'object',
-              },
-              {
-                const: '_score',
-                type: 'string',
-              },
-            ],
-          },
-          type: 'array',
-        },
-      },
-      type: 'object',
-    },
+    dictionary,
   },
-})
+}
 
 inquirer
   .prompt([
@@ -404,10 +154,11 @@ inquirer
       },
     },
   ])
-  .then(({ endpoint, applicationName, apiKey, user, password }) => {
+  .then(({ endpoint, applicationName, apiKey, user, password, indexName }) => {
     const url = `${endpoint}/_application/search_application/${applicationName}`
     const token = Buffer.from(`${user}:${password}`).toString('base64')
     const authorization = apiKey ? `Apikey ${apiKey}` : `Basic ${token}`
+    const body = { ...data, indices: [indexName] }
 
     const spinner = ora('Updating template').start()
     fetch(url, {
@@ -416,7 +167,7 @@ inquirer
         Authorization: authorization,
         'Content-Type': 'application/json',
       },
-      body: data,
+      body: JSON.stringify(body),
     })
       .then(async (response) => {
         if (!response.ok) {
