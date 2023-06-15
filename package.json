@@ -29,6 +29,7 @@
     "build": "tsup --minify",
     "watch": "tsup --watch",
     "prepare": "husky install",
+    "update::template": "node bin/template.mjs",
     "prepublish": "yarn typecheck && yarn lint && yarn test && yarn build",
     "changeset": "changeset",
     "publish": "changeset version && changeset publish",
@@ -64,7 +65,10 @@
   "dependencies": {
     "@changesets/cli": "^2.26.1",
     "@elastic/elasticsearch": "^8.8.0",
+    "chalk": "^5.2.0",
     "cross-fetch": "^3.1.6",
-    "nock": "^13.3.1"
+    "inquirer": "^9.2.7",
+    "nock": "^13.3.1",
+    "ora": "^6.3.1"
   }
 }
