@@ -92,8 +92,8 @@ function App() {
     const r = request()
       .setSort(['_score'])
       .query(query)
-      .addParameter('from', (page - 1) * 12)
-      .addParameter('size', 12)
+      .setPageSize(12)
+      .setPage(page)
       .addParameter('custom-parameter', 'custom-value')
 
     for (const [key, value] of Object.entries(filters)) {
@@ -113,6 +113,8 @@ function App() {
 
   useEffect(() => {
     doSearch()
+
+    window.scroll({ top: 0, behavior: 'smooth' })
   }, [filters, page])
 
   return (
@@ -178,7 +180,15 @@ function App() {
               )
             })}
         </div>
-        <div className="mt-4 flex justify-center">
+        <div className="mt-4 flex justify-center gap-4">
+          {page > 1 && (
+            <button
+              className="bg-blue-500 text-white px-4 py-2 rounded-md"
+              onClick={() => setPage(page - 1)}
+            >
+              Prev Page
+            </button>
+          )}
           <button
             className="bg-blue-500 text-white px-4 py-2 rounded-md"
             onClick={() => setPage(page + 1)}
