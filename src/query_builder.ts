@@ -96,7 +96,12 @@ export class QueryBuilder {
   filter: Query
   params: Params = {}
 
-  constructor(private readonly apiClient: API, baseParams) {
+  constructor(
+    private readonly apiClient: API,
+    baseParams: {
+      facets?: Record<string, FacetConfiguration>
+    } & Params
+  ) {
     const { facets, ...rest } = baseParams
     this.facets = facets
     this.params = rest
