@@ -122,27 +122,14 @@ export class QueryBuilder {
     return this
   }
 
-  setFilter(value: Query): this {
-    this.filter = value
-    return this
-  }
-
-  addParameter(parameter: string, value: unknown): this {
+  addParameter(parameter: keyof Params, value: Params[keyof Params]): this {
     this.params[parameter] = value
 
     return this
   }
 
   query(query: string): this {
-    this.params.query = query
-
-    return this
-  }
-
-  setSort(sort: SortFields): this {
-    this.sort = sort
-
-    return this
+    return this.addParameter('query', query)
   }
 
   async search<Result = unknown>() {
@@ -159,5 +146,33 @@ export class QueryBuilder {
     )
 
     return transformResponse<ResponseParams<Result>>(results, this.facets)
+  }
+
+  setFilter(value: Query): this {
+    this.filter = value
+    return this
+  }
+
+  setFrom(value: Params['from']): this {
+    return this.addParameter('from', value)
+  }
+
+  setPageSize(value: Params['size']): this {
+    return this.addParameter('size', value)
+  }
+
+  setPage(page: number): this {
+    const pageSize = this.params.size
+    if (!pageSize) {
+      throw new Error('You must set the page size before setting the page')
+    }
+
+    return this.addParameter('from', (page - 1) * pageSize)
+  }
+
+  setSort(sort: SortFields): this {
+    this.sort = sort
+
+    return this
   }
 }

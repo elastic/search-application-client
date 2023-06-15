@@ -107,4 +107,48 @@ describe('QueryBuilder', () => {
       })
     })
   })
+
+  describe('query', () => {
+    test('should add query to params', () => {
+      queryBuilder.query('test')
+      expect(queryBuilder.params).toEqual({
+        query: 'test',
+      })
+    })
+  })
+
+  describe('setFrom', () => {
+    test('should add from to params', () => {
+      queryBuilder.setFrom(10)
+      expect(queryBuilder.params).toEqual({
+        from: 10,
+      })
+    })
+  })
+
+  describe('setSize', () => {
+    test('should add size to params', () => {
+      queryBuilder.setPageSize(10)
+      expect(queryBuilder.params).toEqual({
+        size: 10,
+      })
+    })
+  })
+
+  describe('setPage', () => {
+    test('should throw error when page size not set', () => {
+      expect(() => {
+        queryBuilder.setPage(10)
+      }).toThrow('You must set the page size before setting the page')
+    })
+
+    test('should add from to params', () => {
+      queryBuilder.setPageSize(10)
+      queryBuilder.setPage(10)
+      expect(queryBuilder.params).toEqual({
+        size: 10,
+        from: 90,
+      })
+    })
+  })
 })
