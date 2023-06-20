@@ -91,7 +91,7 @@ const transformResponse = <T extends ResponseParams = ResponseParams>(
 }
 
 export class QueryBuilder {
-  readonly facets: Record<string, FacetConfiguration>
+  readonly facets: Record<string, FacetConfiguration> = {}
   facetFilters: Record<string, FilterFieldValue[]> = {}
   sort: SortFields
   filter: Query
