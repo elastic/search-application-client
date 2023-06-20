@@ -8,21 +8,27 @@ Here are some quick links to the important sections:
 - [Installation](#installation)
 - [Usage](#usage)
 - [API Reference](#api-reference)
+- [Advanced Usage](#advanced-usage)
 - [Examples](#examples)
 
 ## <a id="installation">Installation</a>
 
 To install the Search Application Client, you can use npm or yarn.
 
-Using npm:
+### Using npm:
 
 ```bash
 npm install search-application-client
 ```
 
-Using yarn:
+### Using yarn:
 ```bash
 yarn add search-application-client
+```
+
+### In Browser via CDN
+```html
+<script src="https://cdn.jsdelivr.net/npm/@elastic/search-application-client@latest"></script>
 ```
 
 ## <a id="usage">Usage</a>
@@ -46,15 +52,47 @@ const client = SearchApplicationClient(applicationName, endpoint, apiKey, params
 ### Using the Client
 The Search Application Client provides a QueryBuilder class that allows you to build complex search queries:
 ```javascript
-const request = client();
-
-const results = await request
+const results = await client()
   .query('John')
-  .addFacetFilter('actors', 'Keanu Reeves')
-  .setSort({'year': 'desc'})
   .search()
 ```
 The search method returns a Promise that resolves with the search results.
+
+#### Use facets
+To use facets filtering, specify facets in the client initialization:
+```javascript
+const client = SearchApplicationClient('*search-application-name*', '*elasticsearch-endpoint*', '*apiKey*', {
+  facets: {
+    category: { type: 'terms', field: 'category.keyword', size: 10 },
+    price: { type: 'stats', field: 'price', size: 10, disjunctive: true },
+  },
+});
+
+const results = await client()
+  .addFacetFilter('category', 'electronics')
+  .addFacetFilter('price', { from: 100, to: 1000 })
+  .addFacetFilter('author', 'orwell') // ❌ Throw an error, because the facet is not specified during initialization
+  .setSort({'price': 'desc'})
+  .search()
+```
+
+#### Use sorting
+To use sorting, specify the field name and the sort order or pass _score to sort by relevance:
+```javascript
+const results = await client()
+  .setSort([{'publish_date': 'desc'}, "_score"])
+  .search()
+```
+
+#### Use pagination
+To use pagination, set the page number and the page size:
+```javascript
+const results = await client()
+  .setPageSize(20)
+  .setFrom(20 * 2) // For the third page
+  .search()
+```
+By default, page size is 10
 
 ## <a id="api-reference">API Reference</a>
 ### ```SearchApplicationClient()```
@@ -95,6 +133,15 @@ Returns: A promise that resolves to the search results.
   - took: The time taken for the search request.
 
 Please refer to the code and type definitions for more details on the available methods and their parameters.
+
+## <a id="advanced-usage">Advanced Usage</a>
+### Using dictionary for template
+To use template with typechecking you can update your template with prebuilded json schema by running command:
+
+```bash
+yarn update::template
+```
+Once you have updated the template it will use the schema for typechecking of params for each request.
 
 ## <a id="examples">Examples</a>
 

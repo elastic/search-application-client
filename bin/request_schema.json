@@ -248,6 +248,12 @@
         ]
       },
       "type": "array"
+    },
+    "size": {
+      "type": "number"
+    },
+    "from": {
+      "type": "number"
     }
   },
   "type": "object"

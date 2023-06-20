@@ -90,7 +90,7 @@ const transformResponse = <T extends ResponseParams = ResponseParams>(
 }
 
 export class QueryBuilder {
-  readonly facets: Record<string, FacetConfiguration>
+  readonly facets: Record<string, FacetConfiguration> = {}
   facetFilters: Record<string, FilterFieldValue[]> = {}
   sort: SortFields
   filter: Query
@@ -122,27 +122,14 @@ export class QueryBuilder {
     return this
   }
 
-  setFilter(value: Query): this {
-    this.filter = value
-    return this
-  }
-
-  addParameter(parameter: string, value: unknown): this {
+  addParameter(parameter: keyof Params, value: Params[keyof Params]): this {
     this.params[parameter] = value
 
     return this
   }
 
   query(query: string): this {
-    this.params.query = query
-
-    return this
-  }
-
-  setSort(sort: SortFields): this {
-    this.sort = sort
-
-    return this
+    return this.addParameter('query', query)
   }
 
   async search<Result = unknown>() {
@@ -159,5 +146,24 @@ export class QueryBuilder {
     )
 
     return transformResponse<ResponseParams<Result>>(results, this.facets)
+  }
+
+  setFilter(value: Query): this {
+    this.filter = value
+    return this
+  }
+
+  setFrom(value: Params['from']): this {
+    return this.addParameter('from', value)
+  }
+
+  setPageSize(value: Params['size']): this {
+    return this.addParameter('size', value)
+  }
+
+  setSort(sort: SortFields): this {
+    this.sort = sort
+
+    return this
   }
 }

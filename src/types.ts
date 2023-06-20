@@ -20,7 +20,7 @@ export type BaseRangeFilter = {
 }
 export type FilterFieldValue = BaseValueFilter | BaseRangeFilter
 
-export type Params = Record<string, unknown>
+export type Params = { size?: number; from?: number } & Record<string, unknown>
 
 export type FacetFilters = Record<string, FilterFieldValue[]>
 
@@ -101,6 +101,8 @@ export type RequestParams = {
   _es_sort_fields?: SortFields
   query?: SearchRequest['query']['query_string']['query']
   highlight_fields?: SearchRequest['highlight']
+  from?: number
+  size?: number
 }
 
 export type ResponseTermsFacet = {
