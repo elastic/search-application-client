@@ -54,7 +54,6 @@ The Search Application Client provides a QueryBuilder class that allows you to b
 ```javascript
 const results = await client()
   .query('John')
-  .setPage(1)
   .search()
 ```
 The search method returns a Promise that resolves with the search results.
@@ -89,19 +88,11 @@ const results = await client()
 To use pagination, set the page number and the page size:
 ```javascript
 const results = await client()
-  .setPage(2) // For the second page
-  .setPageSize(15)
-  .search()
-```
-By default, page size is 10
-
-Or pass from and size to use from/size pagination:
-```javascript
-const results = await client()
   .setPageSize(20)
   .setFrom(20 * 2) // For the third page
   .search()
 ```
+By default, page size is 10
 
 ## <a id="api-reference">API Reference</a>
 ### ```SearchApplicationClient()```

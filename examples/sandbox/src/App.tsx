@@ -93,7 +93,7 @@ function App() {
       .setSort(['_score'])
       .query(query)
       .setPageSize(12)
-      .setPage(page)
+      .setFrom(12 * (page - 1))
       .addParameter('custom-parameter', 'custom-value')
 
     for (const [key, value] of Object.entries(filters)) {

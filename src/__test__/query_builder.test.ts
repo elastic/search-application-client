@@ -134,15 +134,4 @@ describe('QueryBuilder', () => {
       })
     })
   })
-
-  describe('setPage', () => {
-    test('should add from to params', () => {
-      queryBuilder.setPageSize(10)
-      queryBuilder.setPage(10)
-      expect(queryBuilder.params).toEqual({
-        size: 10,
-        from: 90,
-      })
-    })
-  })
 })
