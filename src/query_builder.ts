@@ -11,6 +11,7 @@ import type {
   ResponseFacets,
 } from './types'
 
+const DEFAULT_PAGE_SIZE = 10
 const transformResponse = <T extends ResponseParams = ResponseParams>(
   results: T[],
   facetConfigurations: Record<string, FacetConfiguration>
@@ -162,10 +163,7 @@ export class QueryBuilder {
   }
 
   setPage(page: number): this {
-    const pageSize = this.params.size
-    if (!pageSize) {
-      throw new Error('You must set the page size before setting the page')
-    }
+    const pageSize = this.params.size || DEFAULT_PAGE_SIZE
 
     return this.addParameter('from', (page - 1) * pageSize)
   }

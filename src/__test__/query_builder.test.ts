@@ -136,12 +136,6 @@ describe('QueryBuilder', () => {
   })
 
   describe('setPage', () => {
-    test('should throw error when page size not set', () => {
-      expect(() => {
-        queryBuilder.setPage(10)
-      }).toThrow('You must set the page size before setting the page')
-    })
-
     test('should add from to params', () => {
       queryBuilder.setPageSize(10)
       queryBuilder.setPage(10)
