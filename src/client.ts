@@ -19,6 +19,10 @@ export class Client {
     )
   }
 
+  /**
+   * @public
+   * @returns {QueryBuilder} - returns QueryBuilder instance
+   */
   initQuery() {
     return new QueryBuilder(this.apiClient, this.baseParams)
   }

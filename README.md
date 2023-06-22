@@ -18,12 +18,12 @@ To install the Search Application Client, you can use npm or yarn.
 ### Using npm:
 
 ```bash
-npm install search-application-client
+npm install @elastic/search-application-client
 ```
 
 ### Using yarn:
 ```bash
-yarn add search-application-client
+yarn add @elastic/search-application-client
 ```
 
 ### In Browser via CDN
@@ -36,7 +36,7 @@ yarn add search-application-client
 You can import the Search Application Client in your JavaScript or TypeScript file using the following import statement:
 
 ```javascript
-import SearchApplicationClient from 'search-application-client';
+import SearchApplicationClient from '@elastic/search-application-client';
 ```
 
 ### Creating an Instance of Client
@@ -94,6 +94,13 @@ const results = await client()
 ```
 By default, page size is 10
 
+#### Use additional parameters
+```javascript
+const results = await client()
+  .addParameter('custom-parameter', 'custom-value')
+  .search()
+```
+
 ## <a id="api-reference">API Reference</a>
 ### ```SearchApplicationClient()```
 Function to initialize searchApplicationClient and returns function to create an instance of the QueryBuilder.
@@ -117,6 +124,15 @@ Adds a facet filter to narrow down the search results. Returns: QueryBuilder ins
 
   - ```field (string)```: The field name of the facet filter.
   - ```value (string | string[] | number | number[])```: The value or range of values for the facet filter.
+
+- ```addParameter(field: string, value: unkown): QueryBuilder```
+Adds a parameter to the query. Returns: QueryBuilder instance.
+
+- ```setPageSize(size: number): QueryBuilder```
+Sets the size for maximum number of results to return. Returns: QueryBuilder instance.
+
+- ```setFrom(value: number): QueryBuilder```
+Defines the number of results to skip, defaulting to 0. Returns: QueryBuilder instance.
 
 - ```setSort(sort: SortFields): QueryBuilder```
 Sets the sorting criteria for the search results. Returns: QueryBuilder instance.
