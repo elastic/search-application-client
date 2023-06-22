@@ -107,6 +107,12 @@ export class QueryBuilder {
     this.params = rest
   }
 
+  /**
+   * @public
+   * @param {string} field
+   * @param {string | Array.string | Object} value
+   * @returns {QueryBuilder}
+   */
   addFacetFilter(field: string, value: FilterFieldValue): this {
     const facetInfo = this.facets?.[field]
 
@@ -122,16 +128,32 @@ export class QueryBuilder {
     return this
   }
 
+  /**
+   * @public
+   * @param {string} parameter
+   * @param {*} value
+   * @returns {QueryBuilder}
+   */
   addParameter(parameter: keyof Params, value: Params[keyof Params]): this {
     this.params[parameter] = value
 
     return this
   }
 
+  /**
+   * @public
+   * @param {string} query
+   * @returns {QueryBuilder}
+   */
   query(query: string): this {
     return this.addParameter('query', query)
   }
 
+  /**
+   * @async
+   * @public - returns search results
+   * @returns {Promise.<Array.<Object>>}
+   */
   async search<Result = unknown>() {
     const requests = new RequestBuilder(
       this.facets,
@@ -148,19 +170,39 @@ export class QueryBuilder {
     return transformResponse<ResponseParams<Result>>(results, this.facets)
   }
 
+  /**
+   * @public
+   * @param {Object} value
+   * @returns {QueryBuilder}
+   */
   setFilter(value: Query): this {
     this.filter = value
     return this
   }
 
+  /**
+   * @public
+   * @param {number} value
+   * @returns {QueryBuilder}
+   */
   setFrom(value: Params['from']): this {
     return this.addParameter('from', value)
   }
 
+  /**
+   * @public
+   * @param {number} value
+   * @returns {QueryBuilder}
+   */
   setPageSize(value: Params['size']): this {
     return this.addParameter('size', value)
   }
 
+  /**
+   * @public
+   * @param {Array.<Object<string, 'desc' | 'asc'>|'_score'>} sort
+   * @returns {QueryBuilder}
+   */
   setSort(sort: SortFields): this {
     this.sort = sort
 
