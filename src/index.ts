@@ -5,6 +5,14 @@ const throwParamRequiredError = (param: string) => {
   throw new Error(`${param} is required`)
 }
 
+/**
+ * @function SearchApplicationClient
+ * @param {string} applicationName
+ * @param {string} endpoint
+ * @param {string} apiKey
+ * @param {Object} params
+ * @returns {function(): QueryBuilder}
+ */
 export default function SearchApplicationClient(
   applicationName: string,
   endpoint: string,
