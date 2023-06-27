@@ -73,6 +73,24 @@ describe('API', () => {
       expect(result).toEqual(mockResponse)
     })
 
+    it('should log and catch any errors during the request', async () => {
+      const consoleErrorSpy = jest.spyOn(console, 'error').mockReturnValue()
+      global.fetch = jest.fn().mockResolvedValueOnce({
+        ok: true,
+        json: jest.fn().mockRejectedValueOnce(new Error('Network error')),
+      })
+
+      const method = 'GET'
+      const url = `${endpoint}${path}`
+
+      await expect(api['request'](method, url)).resolves.toEqual(undefined)
+
+      expect(global.fetch).toHaveBeenCalled()
+      expect(consoleErrorSpy).toHaveBeenCalled()
+    })
+  })
+
+  describe('error', () => {
     it('should throw an error if the response contains an error message', async () => {
       const consoleErrorSpy = jest.spyOn(console, 'error').mockReturnValue()
       const errorMessage = 'Request error'
@@ -89,23 +107,92 @@ describe('API', () => {
       await expect(api['request'](method, url)).resolves.toBeUndefined()
 
       expect(global.fetch).toHaveBeenCalled()
-      expect(consoleErrorSpy).toHaveBeenCalled()
+      expect(consoleErrorSpy).toHaveBeenCalledWith(new Error(errorMessage))
+      expect(consoleErrorSpy.mock.calls[0][0].name).toEqual('Error')
     })
 
-    it('should log and catch any errors during the request', async () => {
+    it('should throw an network error when fetch request was rejected', async () => {
       const consoleErrorSpy = jest.spyOn(console, 'error').mockReturnValue()
-      global.fetch = jest.fn().mockResolvedValueOnce({
+      const errorMessage = 'Request error'
+      global.fetch = jest.fn().mockRejectedValueOnce(new Error(errorMessage))
+
+      const method = 'GET'
+      const url = `${endpoint}${path}`
+
+      await expect(api['request'](method, url)).resolves.toBeUndefined()
+
+      expect(global.fetch).toHaveBeenCalled()
+      expect(consoleErrorSpy).toHaveBeenCalledWith(new Error(errorMessage))
+      expect(consoleErrorSpy.mock.calls[0][0].name).toEqual('[Network Error]')
+    })
+
+    it('should throw a not found error when status 404', async () => {
+      const consoleErrorSpy = jest.spyOn(console, 'error').mockReturnValue()
+      const errorMessage = 'Request error'
+      global.fetch = global.fetch = jest.fn().mockResolvedValueOnce({
         ok: true,
-        json: jest.fn().mockRejectedValueOnce(new Error('Network error')),
+        json: jest.fn().mockResolvedValueOnce({
+          error: { reason: errorMessage, type: 'Not_found' },
+          status: 404,
+        }),
       })
 
       const method = 'GET'
       const url = `${endpoint}${path}`
 
-      await expect(api['request'](method, url)).resolves.toEqual(undefined)
+      await expect(api['request'](method, url)).resolves.toBeUndefined()
 
       expect(global.fetch).toHaveBeenCalled()
-      expect(consoleErrorSpy).toHaveBeenCalled()
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        new Error(`Not_found: ${errorMessage}`)
+      )
+      expect(consoleErrorSpy.mock.calls[0][0].name).toEqual('[Not Found Error]')
+    })
+
+    it('should throw not valid type error when status is 500 and has specific type', async () => {
+      const consoleErrorSpy = jest.spyOn(console, 'error').mockReturnValue()
+      const errorMessage = 'Request error'
+      global.fetch = global.fetch = jest.fn().mockResolvedValueOnce({
+        ok: true,
+        json: jest.fn().mockResolvedValueOnce({
+          error: { reason: errorMessage, type: 'json_parse_exception' },
+          status: 500,
+        }),
+      })
+
+      const method = 'GET'
+      const url = `${endpoint}${path}`
+
+      await expect(api['request'](method, url)).resolves.toBeUndefined()
+
+      expect(global.fetch).toHaveBeenCalled()
+      expect(consoleErrorSpy).toHaveBeenCalledWith(new Error(errorMessage))
+      expect(consoleErrorSpy.mock.calls[0][0].name).toEqual(
+        '[Parameter or type is invalid]'
+      )
+    })
+
+    it('should throw authorization error when status is 401', async () => {
+      const consoleErrorSpy = jest.spyOn(console, 'error').mockReturnValue()
+      const errorMessage = 'Request error'
+      global.fetch = global.fetch = jest.fn().mockResolvedValueOnce({
+        ok: true,
+        json: jest.fn().mockResolvedValueOnce({
+          error: { reason: errorMessage },
+          status: 401,
+        }),
+      })
+
+      const method = 'GET'
+      const url = `${endpoint}${path}`
+
+      await expect(api['request'](method, url)).resolves.toBeUndefined()
+
+      expect(global.fetch).toHaveBeenCalled()
+      expect(consoleErrorSpy).toHaveBeenCalledWith(new Error(errorMessage))
+      expect(consoleErrorSpy.mock.calls[0][0].name).toEqual(
+        '[Authorization Error]'
+      )
     })
   })
 

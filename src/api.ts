@@ -1,5 +1,14 @@
 import { Cache } from './cache'
-import { RequestParams } from './types'
+import { RequestParams, ResponseParams } from './types'
+import { ErrorResponseBase } from '@elastic/elasticsearch/lib/api/types'
+
+interface NetworkError extends Error {
+  isNetworkError: boolean
+}
+interface FetchError extends Error {
+  isFetchError: boolean
+  data: ErrorResponseBase
+}
 
 const cache = new Cache()
 
@@ -12,11 +21,11 @@ export class API {
     private readonly disableCaching: boolean = false
   ) {}
 
-  private request(
+  private request<R extends ResponseParams = ResponseParams>(
     method: 'POST' | 'GET',
     url: string,
     body?: { params: RequestParams }
-  ) {
+  ): Promise<R> {
     const cachedQueryResult =
       !this.disableCaching && cache.getByRequestParams(method, url, body)
     if (cachedQueryResult) {
@@ -32,16 +41,24 @@ export class API {
       },
       body: body ? JSON.stringify(body) : undefined,
     })
-      .then((response) => {
-        if (response.ok) {
-          return response.json()
-        }
-      })
-      .then((result) => {
-        const error = result?.error?.caused_by?.reason || result?.error?.reason
+      .then(
+        (response) => response.json(),
+        (err) => {
+          err.isNetworkError = true
 
-        if (error) {
-          throw new Error(error)
+          throw err
+        }
+      )
+      .then((result) => {
+        if (result.error) {
+          const errorMessage =
+            (result as ErrorResponseBase)?.error?.reason ||
+            (result as ErrorResponseBase)?.error?.caused_by?.reason
+          const fetchError = new Error(errorMessage) as FetchError
+          fetchError.isFetchError = true
+          fetchError.data = result
+
+          throw fetchError
         }
 
         if (!this.disableCaching) {
@@ -50,12 +67,42 @@ export class API {
 
         return result
       })
-      .catch((error) => {
-        console.error(error)
-      })
+      .catch(this.handleError)
   }
 
-  post(body: { params: RequestParams }) {
-    return this.request('POST', `${this.endpoint}${this.path}`, body)
+  async post<R extends ResponseParams = ResponseParams>(body: {
+    params: RequestParams
+  }) {
+    return await this.request<R>('POST', `${this.endpoint}${this.path}`, body)
+  }
+
+  private handleError(error: Error): void {
+    if ((error as NetworkError).isNetworkError) {
+      error.name = '[Network Error]'
+    } else if (
+      (error as FetchError).isFetchError &&
+      (error as FetchError).data.status === 500 &&
+      ((error as FetchError).data.error?.caused_by?.type.includes(
+        'format_exception'
+      ) ||
+        (error as FetchError).data.error.type === 'json_parse_exception')
+    ) {
+      error.name = '[Parameter or type is invalid]'
+    } else if (
+      (error as FetchError).isFetchError &&
+      (error as FetchError).data.status === 401
+    ) {
+      error.name = '[Authorization Error]'
+    } else if (
+      (error as FetchError).isFetchError &&
+      (error as FetchError).data.status === 404
+    ) {
+      error.name = '[Not Found Error]'
+      error.message = `${(error as FetchError).data.error.type}: ${
+        error.message
+      }`
+    }
+
+    console.error(error)
   }
 }
