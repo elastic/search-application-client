@@ -89,7 +89,7 @@ describe('API', () => {
       await expect(api['request'](method, url)).resolves.toBeUndefined()
 
       expect(global.fetch).toHaveBeenCalled()
-      expect(consoleErrorSpy).toHaveBeenCalled()
+      expect(consoleErrorSpy).toHaveBeenCalledWith(new Error(errorMessage))
     })
 
     it('should log and catch any errors during the request', async () => {

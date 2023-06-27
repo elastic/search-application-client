@@ -69,7 +69,7 @@ const transformResponse = <T extends ResponseParams = ResponseParams>(
     []
   )
 
-  const userSpecifiedAggs = Object.keys(results[0].aggregations).reduce(
+  const userSpecifiedAggs = Object.keys(results[0]?.aggregations || {}).reduce(
     (acc, aggregationKey) => {
       if (!facetConfigurations[aggregationKey.replace('_facet', '')]) {
         return {
@@ -141,9 +141,13 @@ export class QueryBuilder {
       this.params
     ).build()
 
-    const results = await Promise.all(
-      requests.map((request) => this.apiClient.post({ params: request }))
-    )
+    const results = (
+      await Promise.all(
+        requests.map((request) =>
+          this.apiClient.post<ResponseParams<Result>>({ params: request })
+        )
+      )
+    ).filter((data) => !!data)
 
     return transformResponse<ResponseParams<Result>>(results, this.facets)
   }
