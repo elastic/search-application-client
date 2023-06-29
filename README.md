@@ -155,7 +155,7 @@ Please refer to the code and type definitions for more details on the available 
 To use template with typechecking you can update your template with prebuilded json schema by running command:
 
 ```bash
-yarn update::template
+npx @elastic/search-application-client update-template
 ```
 Once you have updated the template it will use the schema for typechecking of params for each request.
 
