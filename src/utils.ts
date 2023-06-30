@@ -6,9 +6,7 @@ export const Highlight = (
 ) => {
   const highlightValue = hit.highlight?.[field]
 
-  if (highlightValue?.length) {
-    return highlightValue.length > 1 ? highlightValue : highlightValue[0]
-  }
-
-  return hit['_source'][field]
+  return highlightValue?.length
+    ? highlightValue.join('...')
+    : hit['_source'][field]
 }

@@ -71,10 +71,9 @@ describe('utils', () => {
       }
       const field = 'title'
       const sourceValue = Highlight(hitWithEmptyHighlight, field)
-      expect(sourceValue).toEqual([
-        '<em>Sample</em> Title',
-        '<em>Sample</em> Title 2',
-      ])
+      expect(sourceValue).toEqual(
+        '<em>Sample</em> Title...<em>Sample</em> Title 2'
+      )
     })
   })
 })
