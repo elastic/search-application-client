@@ -151,7 +151,7 @@ Returns: A promise that resolves to the search results.
 Please refer to the code and type definitions for more details on the available methods and their parameters.
 
 ## <a id="advanced-usage">Advanced Usage</a>
-Boilerplate template
+### Boilerplate template
 ```
 PUT _application/search_application/example-app
 {
