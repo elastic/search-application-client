@@ -1,52 +1,13 @@
+#!/usr/bin/env node
 import ora from 'ora'
 import inquirer from 'inquirer'
 import chalk from 'chalk'
 import fetch from 'cross-fetch'
-import { createRequire } from 'module'
-const require = createRequire(import.meta.url)
-const dictionary = require('./request_schema.json')
+import boilerplateTemplate from './boilerplate_template.js'
 
 const AUTH_METHOD = {
   APIKey: 'API Key',
   Cred: 'credentials',
-}
-
-const data = {
-  template: {
-    script: {
-      lang: 'mustache',
-      source: `
-        {
-          "query": {
-            "bool": {
-              "must": [
-              {{#query}}
-              {
-                "query_string": {
-                  "query": "{{query}}"
-                }
-              }
-              {{/query}}
-            ],
-            "filter": {{#toJson}}_es_filters{{/toJson}}
-            }
-          },
-          "aggs": {{#toJson}}_es_aggs{{/toJson}},
-          "from": {{from}},
-          "size": {{size}},
-          "sort": {{#toJson}}_es_sort_fields{{/toJson}}
-        }`,
-      params: {
-        query: '',
-        _es_filters: [],
-        _es_aggs: {},
-        _es_sort_fields: {},
-        from: 0,
-        size: 10,
-      },
-    },
-    dictionary,
-  },
 }
 
 inquirer
@@ -158,7 +119,7 @@ inquirer
     const url = `${endpoint}/_application/search_application/${applicationName}`
     const token = Buffer.from(`${user}:${password}`).toString('base64')
     const authorization = apiKey ? `Apikey ${apiKey}` : `Basic ${token}`
-    const body = { ...data, indices: [indexName] }
+    const body = { ...boilerplateTemplate, indices: [indexName] }
 
     const spinner = ora('Updating template').start()
     fetch(url, {

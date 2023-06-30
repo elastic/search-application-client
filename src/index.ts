@@ -28,3 +28,5 @@ export default function SearchApplicationClient(
 
   return () => client.initQuery()
 }
+
+export * from './utils'

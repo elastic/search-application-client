@@ -151,11 +151,103 @@ Returns: A promise that resolves to the search results.
 Please refer to the code and type definitions for more details on the available methods and their parameters.
 
 ## <a id="advanced-usage">Advanced Usage</a>
+Boilerplate template
+```
+PUT _application/search_application/example-app
+{
+  "indices": ["example-index"],
+  "template": {
+    "script": {
+      "lang": "mustache",
+      "source": """
+        {
+          "query": {
+            "bool": {
+              "must": [
+              {{#query}}
+              {
+                "query_string": {
+                  "query": "{{query}}"
+                }
+              }
+              {{/query}}
+            ],
+            "filter": {{#toJson}}_es_filters{{/toJson}}
+            }
+          },
+          "aggs": {{#toJson}}_es_aggs{{/toJson}},
+          "from": {{from}},
+          "size": {{size}},
+          "sort": {{#toJson}}_es_sort_fields{{/toJson}}
+        }
+      """,
+      "params": {
+        "query": "",
+        "_es_filters": {},
+        "_es_aggs": {},
+        "_es_sort_fields": {},
+        "size": 10,
+        "from": 0
+      }
+    }
+  }
+}
+```
+### Using custom template
+To use custom template you can update boilerplate template within specific properties or params like highlight property:
+
+```
+PUT _application/search_application/example-app
+{
+  "indices": ["example-index"],
+  "template": {
+    "script": {
+      "lang": "mustache",
+      "source": """
+        {
+          "query": {
+            "bool": {
+              "must": [
+              {{#query}}
+                // ...
+              {{/query}}
+            ],
+            "filter": {{#toJson}}_es_filters{{/toJson}}
+            }
+          },
+          "_source": {
+            "includes": ["title", "plot"]
+          },
+          "highlight": {
+    		"fields": {
+      		  "title": { "fragment_size": 0 },
+                "plot": { "fragment_size": 200 }
+             }
+          },
+          "aggs": {{#toJson}}_es_aggs{{/toJson}},
+          "from": {{from}},
+          "size": {{size}},
+          "sort": {{#toJson}}_es_sort_fields{{/toJson}}
+        }
+      """,
+      "params": {
+        "query": "",
+        "_es_filters": {},
+        "_es_aggs": {},
+        "_es_sort_fields": {},
+        "size": 10,
+        "from": 0
+      }
+    }
+  }
+}
+```
+
 ### Using dictionary for template
 To use template with typechecking you can update your template with prebuilded json schema by running command:
 
 ```bash
-yarn update::template
+npx @elastic/search-application-client update-template
 ```
 Once you have updated the template it will use the schema for typechecking of params for each request.
 

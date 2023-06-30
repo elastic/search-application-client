@@ -1,12 +1,17 @@
 {
   "name": "@elastic/search-application-client",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A Search Application Client for Elasticsearch",
   "license": "Apache-2.0",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "jsdelivr": "dist/index.global.js",
+  "keywords": [
+    "search",
+    "elastic",
+    "elasticsearch"
+  ],
   "exports": {
     ".": {
       "import": "./dist/index.mjs",
@@ -16,9 +21,14 @@
     "./package": "./package.json",
     "./package.json": "./package.json"
   },
+  "type": "module",
   "files": [
+    "bin",
     "dist"
   ],
+  "bin": {
+    "update-template": "./bin/template.js"
+  },
   "scripts": {
     "format": "prettier --ignore-unknown --ignore-path .gitignore .",
     "format:write": "yarn format --write",
@@ -29,7 +39,7 @@
     "build": "tsup --minify",
     "watch": "tsup --watch",
     "prepare": "husky install",
-    "update::template": "node bin/template.mjs",
+    "update::template": "node bin/template.js",
     "prepublish": "yarn typecheck && yarn lint && yarn test && yarn build",
     "changeset": "changeset",
     "publish": "changeset version && changeset publish",
