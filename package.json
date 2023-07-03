@@ -42,7 +42,7 @@
     "update::template": "node bin/template.js",
     "prepublish": "yarn typecheck && yarn lint && yarn test && yarn build",
     "changeset": "changeset",
-    "publish": "changeset version && changeset publish",
+    "publish::public": "yarn prepublish && changeset version && changeset publish",
     "publish::local": "yarn build && cd examples/sandbox && rm -rf node_modules/@elastic/search-application-client && yarn add file:../../"
   },
   "devDependencies": {
@@ -69,9 +69,9 @@
     "**/*": "yarn format"
   },
   "publishConfig": {
-    "access": "public",
-    "registry": "https://registry.npmjs.org/"
+    "access": "public"
   },
+  "repository": "https://github.com/elastic/search-application-client",
   "dependencies": {
     "@changesets/cli": "^2.26.1",
     "@elastic/elasticsearch": "^8.8.0",
