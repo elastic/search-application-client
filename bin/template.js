@@ -43,13 +43,15 @@ inquirer
     {
       type: 'input',
       name: 'indexName',
-      message: `Enter ${chalk.bgGrey('index')} for your search application`,
+      message: `Enter ${chalk.bgGrey(
+        'index'
+      )} for your search application (divide by space if multiple)`,
       filter(input) {
         return new Promise((resolve, reject) => {
           if (!input) {
             reject('Index is required')
           } else {
-            resolve(input)
+            resolve(input.split(' '))
           }
         })
       },
@@ -115,11 +117,11 @@ inquirer
       },
     },
   ])
-  .then(({ endpoint, applicationName, apiKey, user, password, indexName }) => {
+  .then(({ endpoint, applicationName, apiKey, user, password, indices }) => {
     const url = `${endpoint}/_application/search_application/${applicationName}`
     const token = Buffer.from(`${user}:${password}`).toString('base64')
     const authorization = apiKey ? `Apikey ${apiKey}` : `Basic ${token}`
-    const body = { ...boilerplateTemplate, indices: [indexName] }
+    const body = { ...boilerplateTemplate, indices }
 
     const spinner = ora('Updating template').start()
     fetch(url, {
