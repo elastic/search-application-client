@@ -8,7 +8,7 @@ export class Client {
     applicationName: string,
     endpoint: string,
     apiKey: string,
-    public baseParams: Record<string, any>,
+    public readonly baseParams?: Record<string, any>,
     requestHeaders?: Record<string, string>
   ) {
     this.apiClient = new API(
