@@ -22,7 +22,6 @@ export default function SearchApplicationClient(
   if (!applicationName) throwParamRequiredError('applicationName')
   if (!endpoint) throwParamRequiredError('endpoint')
   if (!apiKey) throwParamRequiredError('apiKey')
-  if (!params) throwParamRequiredError('params')
 
   const client = new Client(applicationName, endpoint, apiKey, params)
 

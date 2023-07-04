@@ -100,7 +100,7 @@ export class QueryBuilder {
     private readonly apiClient: API,
     baseParams: {
       facets?: Record<string, FacetConfiguration>
-    } & Params
+    } & Params = {}
   ) {
     const { facets, ...rest } = baseParams
     this.facets = facets
