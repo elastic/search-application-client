@@ -3,8 +3,6 @@
   "version": "8.9.0-alpha1",
   "description": "A Search Application Client for Elasticsearch",
   "license": "Apache-2.0",
-  "main": "dist/index.js",
-  "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "jsdelivr": "dist/index.global.js",
   "keywords": [
@@ -14,8 +12,8 @@
   ],
   "exports": {
     ".": {
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.js",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
       "types": "./dist/index.d.ts"
     },
     "./package": "./package.json",
