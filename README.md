@@ -2,6 +2,8 @@
 
 The Search Application Client is a JavaScript library that provides functionality for interacting with a search application in Elasticsearch.
 
+> ℹ️ The Search Application Client is in **technical preview** and is subject to change.
+
 ## Quick Access
 Here are some quick links to the important sections:
 
