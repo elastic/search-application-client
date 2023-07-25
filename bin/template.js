@@ -42,7 +42,7 @@ inquirer
     },
     {
       type: 'input',
-      name: 'indexName',
+      name: 'indices',
       message: `Enter ${chalk.bgGrey(
         'index'
       )} for your search application (divide by space if multiple)`,
