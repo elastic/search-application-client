@@ -1,5 +1,6 @@
 import { QueryBuilder } from '../query_builder'
 import { API } from '../api'
+import { FacetConfiguration } from '../request_builder'
 
 describe('QueryBuilder', () => {
   let queryBuilder: QueryBuilder
@@ -132,6 +133,27 @@ describe('QueryBuilder', () => {
       expect(queryBuilder.params).toEqual({
         size: 10,
       })
+    })
+  })
+
+  describe('facets', () => {
+    test('should set empty object when facets not passed in configuration params', () => {
+      expect(queryBuilder.facets).toEqual({})
+    })
+
+    test('should set facets when passed in configuration params', () => {
+      const facets = {
+        imdbrating: {
+          type: 'stats',
+          field: 'imdbrating',
+        },
+      } as { [name: string]: FacetConfiguration }
+
+      expect(
+        new QueryBuilder(new API('', '', ''), {
+          facets,
+        }).facets
+      ).toEqual(facets)
     })
   })
 })
