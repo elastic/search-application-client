@@ -103,7 +103,7 @@ export class QueryBuilder {
     } & Params = {}
   ) {
     const { facets, ...rest } = baseParams
-    this.facets = facets
+    this.facets = facets || {}
     this.params = rest
   }
 
