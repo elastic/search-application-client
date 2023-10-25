@@ -49,7 +49,7 @@ const client = SearchApplicationClient(applicationName, endpoint, apiKey, params
 - applicationName: The name of the search application.
 - endpoint: The URL of the search application's endpoint.
 - apiKey: The API key for accessing the search application.
-- params: Additional parameters to be passed to the client.
+- params (optional): Additional parameters to be passed to the client.
 
 ### Using the Client
 The Search Application Client provides a QueryBuilder class that allows you to build complex search queries:
@@ -110,7 +110,7 @@ Function to initialize searchApplicationClient and returns function to create an
 - ```applicationName (string)```: The name of the search application.
 - ```endpoint (string)```: The URL of the search application's endpoint.
 - ```apiKey (string)```: The API key for accessing the search application.
-- ```params (Params)```: Additional parameters to be passed to the client.
+- ```params? (Params)```: Additional parameters to be passed to the client.
 
 Returns: function that returns new QueryBuilder instance.
 
