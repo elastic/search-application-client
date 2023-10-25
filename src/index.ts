@@ -17,7 +17,7 @@ export default function SearchApplicationClient(
   applicationName: string,
   endpoint: string,
   apiKey: string,
-  params: Record<string, any>
+  params?: Record<string, any>
 ): () => QueryBuilder {
   if (!applicationName) throwParamRequiredError('applicationName')
   if (!endpoint) throwParamRequiredError('endpoint')
