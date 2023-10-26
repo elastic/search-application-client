@@ -76,7 +76,7 @@ describe('Full integration test', () => {
                     ],
                   },
                 },
-                "query": "test",
+                "query_string": "test",
               },
             }
           `)
@@ -123,7 +123,7 @@ describe('Full integration test', () => {
                   },
                 },
                 "from": 0,
-                "query": "test",
+                "query_string": "test",
                 "size": 0,
               },
             }
