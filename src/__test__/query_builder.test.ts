@@ -113,7 +113,7 @@ describe('QueryBuilder', () => {
     test('should add query to params', () => {
       queryBuilder.query('test')
       expect(queryBuilder.params).toEqual({
-        query: 'test',
+        query_string: 'test',
       })
     })
   })

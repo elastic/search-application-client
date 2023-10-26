@@ -146,7 +146,7 @@ export class QueryBuilder {
    * @returns {QueryBuilder}
    */
   query(query: string): this {
-    return this.addParameter('query', query)
+    return this.addParameter('query_string', query)
   }
 
   /**
