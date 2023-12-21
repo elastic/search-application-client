@@ -2,9 +2,14 @@ import { Client } from '../client'
 
 describe('Client', () => {
   test('should create api client without header', () => {
-    const client = new Client({ applicationName: '', endpoint: '', apiKey: '' })
+    const client = new Client({
+      applicationName: '',
+      endpoint: '',
+      apiKey: '',
+      apiOptions: {},
+    })
 
-    expect(client['apiClient']['headers']).toEqual({})
+    expect(client['apiClient']['options']).toEqual({})
   })
 
   test('should create api client with proper header', () => {
@@ -20,7 +25,7 @@ describe('Client', () => {
       },
     })
 
-    expect(client['apiClient']['headers']).toEqual({
+    expect(client['apiClient']['options']['headers']).toEqual({
       'x-api-key': 'test',
     })
   })
