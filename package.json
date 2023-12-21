@@ -1,6 +1,6 @@
 {
   "name": "@elastic/search-application-client",
-  "version": "8.9.0-1",
+  "version": "8.9.0-2",
   "description": "A Search Application Client for Elasticsearch",
   "license": "Apache-2.0",
   "types": "dist/index.d.ts",
