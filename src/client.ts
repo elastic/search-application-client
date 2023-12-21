@@ -1,21 +1,29 @@
-import { API } from './api'
+import { API, Options } from './api'
 import { QueryBuilder } from './query_builder'
 
 export class Client {
   private readonly apiClient: API
+  private readonly baseParams: Record<string, any>
 
-  constructor(
-    applicationName: string,
-    endpoint: string,
-    apiKey: string,
-    public readonly baseParams?: Record<string, any>,
-    requestHeaders?: Record<string, string>
-  ) {
+  constructor({
+    applicationName,
+    endpoint,
+    apiKey,
+    baseParams,
+    apiOptions,
+  }: {
+    applicationName: string
+    endpoint: string
+    apiKey: string
+    baseParams?: Record<string, any>
+    apiOptions?: Options
+  }) {
+    this.baseParams = baseParams || {}
     this.apiClient = new API(
       apiKey,
       endpoint,
       `/_application/search_application/${applicationName}/_search`,
-      requestHeaders
+      apiOptions
     )
   }
 

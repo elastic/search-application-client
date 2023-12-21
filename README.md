@@ -50,6 +50,11 @@ const client = SearchApplicationClient(applicationName, endpoint, apiKey, params
 - endpoint: The URL of the search application's endpoint.
 - apiKey: The API key for accessing the search application.
 - params (optional): Additional parameters to be passed to the client.
+- apiOptions (optional): Additional options to be passed to the API client.
+  - cacheExpiration (optional): The cache expiration time in milliseconds. Default: 3600000 (one hour).
+  - disableCache (optional): Disables the cache. Default: false.
+  - headers (optional): Additional headers to be passed to the API client.
+- Returns: A function that returns a new QueryBuilder instance.
 
 ### Using the Client
 The Search Application Client provides a QueryBuilder class that allows you to build complex search queries:

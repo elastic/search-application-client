@@ -13,7 +13,8 @@ const request = SearchApplicationClient(
   /*Application name*/,
   /*Elasticsearch endpoint*/,
   /*API key*/,
-  /*Additional params*/
+  /*Additional params*/,
+  /*API options*/
 )
 ```
 3. Start server. This will start the server on port 3000.
