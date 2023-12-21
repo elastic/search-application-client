@@ -38,9 +38,9 @@
     "watch": "tsup --watch",
     "prepare": "husky install",
     "update::template": "node bin/template.js",
-    "prepublish": "yarn typecheck && yarn lint && yarn test && yarn build",
+    "prepublishing": "yarn typecheck && yarn lint && yarn test && yarn build",
     "changeset": "changeset",
-    "publish::public": "yarn prepublish && changeset version && changeset publish",
+    "publish::public": "yarn prepublishing && changeset version && changeset publish",
     "publish::local": "yarn build && cd examples/sandbox && rm -rf node_modules/@elastic/search-application-client && yarn add file:../../"
   },
   "devDependencies": {
