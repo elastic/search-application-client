@@ -16,11 +16,9 @@ export interface Options {
   headers?: HeadersInit
 }
 
-const cache = new Cache()
-
 export class API {
-  public readonly options: Options
-  public cache = cache
+  private readonly options: Options
+  private readonly cacheService
   constructor(
     private readonly apiKey: string,
     private readonly endpoint: string,
@@ -30,6 +28,7 @@ export class API {
       headers: {},
     }
   ) {
+    this.cacheService = new Cache()
     this.options = { cache: true, ...options }
   }
 
@@ -44,7 +43,8 @@ export class API {
       endpoint: this.endpoint,
     }
     const cachedQueryResult =
-      this.options.cache && cache.getByRequestParams(method, url, cacheParams)
+      this.options.cache &&
+      this.cacheService.getByRequestParams(method, url, cacheParams)
 
     if (cachedQueryResult) {
       return Promise.resolve(cachedQueryResult)
@@ -80,7 +80,7 @@ export class API {
         }
 
         if (this.options.cache) {
-          cache.setByRequestParams(
+          this.cacheService.setByRequestParams(
             method,
             url,
             cacheParams,
