@@ -9,7 +9,7 @@ describe('Client', () => {
       apiOptions: {},
     })
 
-    expect(client['apiClient']['options']).toEqual({})
+    expect(client['apiClient']['options']).toEqual({ cache: true })
   })
 
   test('should create api client with proper header', () => {
