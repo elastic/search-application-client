@@ -35,7 +35,12 @@ export class Cache {
     }
   }
 
-  setByRequestParams(method, url, params: Record<string, any>, value: any) {
+  setByRequestParams(
+    method: 'POST' | 'GET',
+    url: string,
+    params: Record<string, any>,
+    value: any
+  ) {
     const key = this.createKeyByRequestParams(method, url, params)
     this.set(key, value)
   }

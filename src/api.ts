@@ -10,24 +10,42 @@ interface FetchError extends Error {
   data: ErrorResponseBase
 }
 
-const cache = new Cache()
+export interface Options {
+  cacheExpiration?: number
+  cache?: boolean
+  headers?: HeadersInit
+}
 
 export class API {
+  private readonly options: Options
+  private readonly cacheService
   constructor(
     private readonly apiKey: string,
     private readonly endpoint: string,
     private readonly path: string,
-    private readonly headers: HeadersInit = {},
-    private readonly disableCaching: boolean = false
-  ) {}
+    options: Options = {
+      cache: true,
+      headers: {},
+    }
+  ) {
+    this.cacheService = new Cache(options.cacheExpiration)
+    this.options = { cache: true, ...options }
+  }
 
   private request<R extends ResponseParams = ResponseParams>(
     method: 'POST' | 'GET',
     url: string,
     body?: { params: RequestParams }
   ): Promise<R> {
+    const cacheParams = {
+      ...body,
+      apiKey: this.apiKey,
+      endpoint: this.endpoint,
+    }
     const cachedQueryResult =
-      !this.disableCaching && cache.getByRequestParams(method, url, body)
+      this.options.cache &&
+      this.cacheService.getByRequestParams(method, url, cacheParams)
+
     if (cachedQueryResult) {
       return Promise.resolve(cachedQueryResult)
     }
@@ -35,7 +53,7 @@ export class API {
     return fetch(url, {
       method,
       headers: {
-        ...this.headers,
+        ...this.options.headers,
         'Content-Type': 'application/json',
         Authorization: `Apikey ${this.apiKey}`,
       },
@@ -61,8 +79,8 @@ export class API {
           throw fetchError
         }
 
-        if (!this.disableCaching) {
-          cache.setByRequestParams(method, url, body, result)
+        if (this.options.cache) {
+          this.cacheService.setByRequestParams(method, url, cacheParams, result)
         }
 
         return result
