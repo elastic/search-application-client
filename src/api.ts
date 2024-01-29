@@ -12,7 +12,7 @@ interface FetchError extends Error {
 
 export interface Options {
   cacheExpiration?: number
-  disableCache?: boolean
+  cache?: boolean
   headers?: HeadersInit
 }
 
@@ -24,7 +24,7 @@ export class API {
     private readonly endpoint: string,
     private readonly path: string,
     private readonly options: Options = {
-      disableCache: false,
+      cache: true,
       headers: {},
     }
   ) {}
@@ -35,7 +35,7 @@ export class API {
     body?: { params: RequestParams }
   ): Promise<R> {
     const cachedQueryResult =
-      !this.options.disableCache &&
+      this.options.cache &&
       cache.getByRequestParams(method, url, {
         ...body,
         apiKey: this.apiKey,
@@ -74,7 +74,7 @@ export class API {
           throw fetchError
         }
 
-        if (!this.options.disableCache) {
+        if (this.options.cache) {
           cache.setByRequestParams(
             method,
             url,

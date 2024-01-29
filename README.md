@@ -52,7 +52,7 @@ const client = SearchApplicationClient(applicationName, endpoint, apiKey, params
 - params (optional): Additional parameters to be passed to the client.
 - apiOptions (optional): Additional options to be passed to the API client.
   - cacheExpiration (optional): The cache expiration time in milliseconds. Default: 3600000 (one hour).
-  - disableCache (optional): Disables the cache. Default: false.
+  - cache (optional): Enable/disables the cache. Default: true.
   - headers (optional): Additional headers to be passed to the API client.
 - Returns: A function that returns a new QueryBuilder instance.
 

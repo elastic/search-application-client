@@ -10,7 +10,7 @@ describe('API', () => {
   let api: API
 
   beforeEach(() => {
-    api = new API(apiKey, endpoint, path, { headers, disableCache: true })
+    api = new API(apiKey, endpoint, path, { headers, cache: false })
   })
 
   afterEach(() => {
