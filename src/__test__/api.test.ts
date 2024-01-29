@@ -73,6 +73,60 @@ describe('API', () => {
       expect(result).toEqual(mockResponse)
     })
 
+    it('should make a GET request and return caching data', async () => {
+      api = new API(apiKey, endpoint, path, { headers })
+
+      const mockResponse = { data: 'Response data' }
+      global.fetch = jest.fn().mockResolvedValueOnce({
+        ok: true,
+        json: jest.fn().mockResolvedValueOnce(mockResponse),
+      })
+
+      const method = 'GET'
+      const url = `${endpoint}${path}`
+
+      let result = await api['request'](method, url)
+
+      expect(result).toEqual(mockResponse)
+
+      global.fetch = jest.fn().mockResolvedValueOnce({
+        ok: true,
+        json: jest.fn().mockResolvedValueOnce({ data: '' }),
+      })
+
+      result = await api['request'](method, url)
+
+      expect(result).toEqual(mockResponse)
+    })
+
+    it('should make a GET request and return non-caching data when data is expired', async () => {
+      Date.now = jest.fn().mockReturnValue(0)
+      api = new API(apiKey, endpoint, path, { headers, cacheExpiration: 1 })
+
+      const mockResponse = { data: 'Response data' }
+      global.fetch = jest.fn().mockResolvedValueOnce({
+        ok: true,
+        json: jest.fn().mockResolvedValueOnce(mockResponse),
+      })
+
+      const method = 'GET'
+      const url = `${endpoint}${path}`
+
+      let result = await api['request'](method, url)
+
+      expect(result).toEqual(mockResponse)
+
+      global.fetch = jest.fn().mockResolvedValueOnce({
+        ok: true,
+        json: jest.fn().mockResolvedValueOnce({ data: '' }),
+      })
+      Date.now = jest.fn().mockReturnValue(5)
+
+      result = await api['request'](method, url)
+
+      expect(result).toEqual({ data: '' })
+    })
+
     it('should log and catch any errors during the request', async () => {
       const consoleErrorSpy = jest.spyOn(console, 'error').mockReturnValue()
       global.fetch = jest.fn().mockResolvedValueOnce({

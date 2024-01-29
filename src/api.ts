@@ -19,28 +19,33 @@ export interface Options {
 const cache = new Cache()
 
 export class API {
+  public readonly options: Options
+  public cache = cache
   constructor(
     private readonly apiKey: string,
     private readonly endpoint: string,
     private readonly path: string,
-    private readonly options: Options = {
+    options: Options = {
       cache: true,
       headers: {},
     }
-  ) {}
+  ) {
+    this.options = { cache: true, ...options }
+  }
 
   private request<R extends ResponseParams = ResponseParams>(
     method: 'POST' | 'GET',
     url: string,
     body?: { params: RequestParams }
   ): Promise<R> {
+    const cacheParams = {
+      ...body,
+      apiKey: this.apiKey,
+      endpoint: this.endpoint,
+    }
     const cachedQueryResult =
-      this.options.cache &&
-      cache.getByRequestParams(method, url, {
-        ...body,
-        apiKey: this.apiKey,
-        endpoint: this.endpoint,
-      })
+      this.options.cache && cache.getByRequestParams(method, url, cacheParams)
+
     if (cachedQueryResult) {
       return Promise.resolve(cachedQueryResult)
     }
@@ -78,7 +83,7 @@ export class API {
           cache.setByRequestParams(
             method,
             url,
-            body,
+            cacheParams,
             result,
             this.options.cacheExpiration
           )

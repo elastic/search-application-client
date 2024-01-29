@@ -31,7 +31,7 @@ export class Cache {
   set(key: string, value: any, expiration?: number) {
     this.cache[key] = {
       value,
-      expiration: expiration ?? Date.now() + this.ttl,
+      expiration: expiration ? Date.now() + expiration : Date.now() + this.ttl,
     }
   }
 
