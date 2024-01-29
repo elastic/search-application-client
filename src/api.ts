@@ -28,7 +28,7 @@ export class API {
       headers: {},
     }
   ) {
-    this.cacheService = new Cache()
+    this.cacheService = new Cache(options.cacheExpiration)
     this.options = { cache: true, ...options }
   }
 
@@ -80,13 +80,7 @@ export class API {
         }
 
         if (this.options.cache) {
-          this.cacheService.setByRequestParams(
-            method,
-            url,
-            cacheParams,
-            result,
-            this.options.cacheExpiration
-          )
+          this.cacheService.setByRequestParams(method, url, cacheParams, result)
         }
 
         return result

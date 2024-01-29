@@ -28,21 +28,20 @@ export class Cache {
     return cached.value
   }
 
-  set(key: string, value: any, expiration?: number) {
+  set(key: string, value: any) {
     this.cache[key] = {
       value,
-      expiration: expiration ? Date.now() + expiration : Date.now() + this.ttl,
+      expiration: Date.now() + this.ttl,
     }
   }
 
   setByRequestParams(
-    method,
-    url,
+    method: 'POST' | 'GET',
+    url: string,
     params: Record<string, any>,
-    value: any,
-    expiration?: number
+    value: any
   ) {
     const key = this.createKeyByRequestParams(method, url, params)
-    this.set(key, value, expiration)
+    this.set(key, value)
   }
 }
