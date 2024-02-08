@@ -154,7 +154,7 @@ export class QueryBuilder {
    * @public - returns search results
    * @returns {Promise.<Array.<Object>>}
    */
-  async search<Result = unknown>() {
+  async search<Result = unknown>(errorHandler?: (error: Error) => void) {
     const requests = new RequestBuilder(
       this.facets,
       this.facetFilters,
