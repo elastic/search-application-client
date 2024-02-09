@@ -214,14 +214,15 @@ function App() {
               Prev Page
             </button>
           )}
-          {(results?.hits?.total.value || 0) / PAGE_SIZE < page && (
-            <button
-              className="bg-blue-500 text-white px-4 py-2 rounded-md"
-              onClick={() => setPage(page + 1)}
-            >
-              Next Page
-            </button>
-          )}
+          {results?.hits?.total.value &&
+            (results?.hits?.total.value || 0) / PAGE_SIZE < page && (
+              <button
+                className="bg-blue-500 text-white px-4 py-2 rounded-md"
+                onClick={() => setPage(page + 1)}
+              >
+                Next Page
+              </button>
+            )}
         </div>
       </div>
     </div>
