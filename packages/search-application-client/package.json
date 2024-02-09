@@ -31,7 +31,7 @@
     "build": "tsup --minify",
     "dev": "tsup --watch",
     "lint": "eslint .",
-    "type-check": "tsc --noEmit",
+    "type-check": "tsc",
     "test": "jest",
     "update::template": "node bin/template.js"
   },

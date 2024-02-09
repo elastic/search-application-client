@@ -8,15 +8,13 @@
     "lint": "turbo run lint",
     "test": "turbo run test",
     "type-check": "turbo run type-check",
-    "format": "prettier --ignore-unknown --ignore-path .gitignore .",
+    "format": "prettier --check --ignore-unknown --ignore-path .gitignore .",
     "format:write": "yarn format --write",
     "publish-packages": "turbo run type-check build lint test && changeset version && changeset publish",
     "prepare": "husky install",
     "update::template": "node bin/template.js"
   },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx}": "yarn lint",
-    "src/**/*.{ts,tsx}": "yarn type-check --resolveJsonModule --esModuleInterop",
     "**/*": "yarn format"
   },
   "devDependencies": {
