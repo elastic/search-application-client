@@ -25,7 +25,10 @@
     "prettier": "^3.2.5",
     "turbo": "^1.12.3"
   },
-  "packageManager": "yarn@1.22.21",
+  "packageManager": "yarn@1.22.19",
+  "engines": {
+    "node": ">=18"
+  },
   "workspaces": [
     "examples/*",
     "packages/*"

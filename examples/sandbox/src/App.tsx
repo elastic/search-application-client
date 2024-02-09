@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import SearchApplicationClient from '@elastic/search-application-client'
-import './App.css'
 
 const request = SearchApplicationClient(
   'movies',
@@ -27,14 +26,14 @@ const request = SearchApplicationClient(
   }
 )
 
-function Facets({ facets, addFilter, removeFilter, filters }: any) {
+function Facets({ facets, addFilter, removeFilter, filters }) {
   if (!facets) {
     return null
   }
   return (
     <div className="md:w-1/4 bg-gray-100 p-4">
       {facets &&
-        facets.map((facet: any) => {
+        facets.map((facet) => {
           if (facet.name === 'imdbrating') {
             return (
               <div key={facet.name} className="pb-4">
@@ -52,7 +51,7 @@ function Facets({ facets, addFilter, removeFilter, filters }: any) {
               <h3 className="text-base font-semibold mb-2 uppercase">
                 {facet.name}
               </h3>
-              {facet.entries.map((bucket: any) => {
+              {facet.entries.map((bucket) => {
                 const isSelected =
                   filters[facet.name] &&
                   filters[facet.name].includes(bucket.value)
@@ -85,8 +84,8 @@ function Facets({ facets, addFilter, removeFilter, filters }: any) {
 function App() {
   const [query, setQuery] = useState('')
   const [page, setPage] = useState(1)
-  const [results, setResults] = useState<any>(null)
-  const [filters, setFilters] = useState<any>({})
+  const [results, setResults] = useState(null)
+  const [filters, setFilters] = useState({})
 
   const doSearch = async () => {
     const r = request()
@@ -105,7 +104,7 @@ function App() {
     setResults(results)
   }
 
-  const handleSearch = async (e: any) => {
+  const handleSearch = async (e) => {
     e.preventDefault()
     setPage(1)
     doSearch()
@@ -122,7 +121,7 @@ function App() {
       <Facets
         facets={results && results.facets}
         filters={filters}
-        addFilter={(filter: any, value: any) => {
+        addFilter={(filter, value) => {
           const existingFilters = filters[filter] || []
           setFilters({
             ...filters,
@@ -130,11 +129,11 @@ function App() {
           })
           setPage(1)
         }}
-        removeFilter={(filter: any, value: any) => {
+        removeFilter={(filter, value) => {
           const existingFilters = filters[filter] || []
           setFilters({
             ...filters,
-            [filter]: existingFilters.filter((v: any) => v !== value),
+            [filter]: existingFilters.filter((v) => v !== value),
           })
           setPage(1)
         }}
@@ -163,7 +162,7 @@ function App() {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {results &&
-            results?.hits?.hits?.map((hit: any) => {
+            results?.hits?.hits?.map((hit) => {
               return (
                 <div
                   key={hit._id}
@@ -189,12 +188,14 @@ function App() {
               Prev Page
             </button>
           )}
-          <button
-            className="bg-blue-500 text-white px-4 py-2 rounded-md"
-            onClick={() => setPage(page + 1)}
-          >
-            Next Page
-          </button>
+          {!!results?.hits?.hits.length && (
+            <button
+              className="bg-blue-500 text-white px-4 py-2 rounded-md"
+              onClick={() => setPage(page + 1)}
+            >
+              Next Page
+            </button>
+          )}
         </div>
       </div>
     </div>
