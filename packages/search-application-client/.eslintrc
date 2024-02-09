@@ -17,6 +17,11 @@
       "env": {
         "node": true
       }
+    },{
+      "files": ["*.test.ts"],
+      "rules": {
+        "jest/no-conditional-expect": "off"
+      }
     }
   ],
   "env": {
