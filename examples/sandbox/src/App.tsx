@@ -26,7 +26,18 @@ const request = SearchApplicationClient(
   }
 )
 
-function Facets({ facets, addFilter, removeFilter, filters }) {
+interface FacetProps {
+  facets?: {
+    name: string
+    stats?: { min: number; max: number }
+    entries: { value: string; count: number }[]
+  }[]
+  addFilter: (filter: string, value: string) => void
+  removeFilter: (filter: string, value: string) => void
+  filters: Record<string, string[]>
+}
+
+function Facets({ facets, addFilter, removeFilter, filters }: FacetProps) {
   if (!facets) {
     return null
   }
@@ -41,7 +52,7 @@ function Facets({ facets, addFilter, removeFilter, filters }) {
                   {facet.name}
                 </h3>
                 <p>
-                  Min: {facet.stats.min} Max: {facet.stats.max}
+                  Min: {facet.stats?.min} Max: {facet.stats?.max}
                 </p>
               </div>
             )
@@ -81,30 +92,45 @@ function Facets({ facets, addFilter, removeFilter, filters }) {
   )
 }
 
+const PAGE_SIZE = 12
+
 function App() {
   const [query, setQuery] = useState('')
   const [page, setPage] = useState(1)
-  const [results, setResults] = useState(null)
-  const [filters, setFilters] = useState({})
+  const [results, setResults] = useState<{
+    facets: FacetProps['facets']
+    hits: {
+      total: { value: number }
+      hits: {
+        _id: string
+        _source: { title: string; poster: string; plot: string }
+      }[]
+    }
+  } | null>(null)
+  const [filters, setFilters] = useState<Record<string, string[]>>({})
 
   const doSearch = async () => {
     const r = request()
       .setSort(['_score'])
       .query(query)
-      .setPageSize(12)
-      .setFrom(12 * (page - 1))
+      .setPageSize(PAGE_SIZE)
+      .setFrom(PAGE_SIZE * (page - 1))
       .addParameter('custom-parameter', 'custom-value')
 
     for (const [key, value] of Object.entries(filters)) {
-      r.addFacetFilter(key, value as string)
+      r.addFacetFilter(key, value as string[])
     }
 
-    const results = await r.search()
+    try {
+      const updatedResults = await r.search()
 
-    setResults(results)
+      setResults(updatedResults as typeof results)
+    } catch (error) {
+      console.log('Error during search', error)
+    }
   }
 
-  const handleSearch = async (e) => {
+  const handleSearch = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setPage(1)
     doSearch()
@@ -119,7 +145,7 @@ function App() {
   return (
     <div className="flex flex-col md:flex-row">
       <Facets
-        facets={results && results.facets}
+        facets={results ? results.facets : undefined}
         filters={filters}
         addFilter={(filter, value) => {
           const existingFilters = filters[filter] || []
@@ -158,7 +184,7 @@ function App() {
           </button>
         </form>
         <div className="mt-4">
-          <p className="text-gray-500">{results?.hits?.total?.value} Results</p>
+          <p className="text-gray-500">{results?.hits?.total.value} Results</p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {results &&
@@ -188,7 +214,7 @@ function App() {
               Prev Page
             </button>
           )}
-          {!!results?.hits?.hits.length && (
+          {(results?.hits?.total.value || 0) / PAGE_SIZE < page && (
             <button
               className="bg-blue-500 text-white px-4 py-2 rounded-md"
               onClick={() => setPage(page + 1)}
