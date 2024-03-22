@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import SearchApplicationClient from '@elastic/search-application-client'
-import './App.css'
 
 const request = SearchApplicationClient(
   'movies',
@@ -27,14 +26,25 @@ const request = SearchApplicationClient(
   }
 )
 
-function Facets({ facets, addFilter, removeFilter, filters }: any) {
+interface FacetProps {
+  facets?: {
+    name: string
+    stats?: { min: number; max: number }
+    entries: { value: string; count: number }[]
+  }[]
+  addFilter: (filter: string, value: string) => void
+  removeFilter: (filter: string, value: string) => void
+  filters: Record<string, string[]>
+}
+
+function Facets({ facets, addFilter, removeFilter, filters }: FacetProps) {
   if (!facets) {
     return null
   }
   return (
     <div className="md:w-1/4 bg-gray-100 p-4">
       {facets &&
-        facets.map((facet: any) => {
+        facets.map((facet) => {
           if (facet.name === 'imdbrating') {
             return (
               <div key={facet.name} className="pb-4">
@@ -42,7 +52,7 @@ function Facets({ facets, addFilter, removeFilter, filters }: any) {
                   {facet.name}
                 </h3>
                 <p>
-                  Min: {facet.stats.min} Max: {facet.stats.max}
+                  Min: {facet.stats?.min} Max: {facet.stats?.max}
                 </p>
               </div>
             )
@@ -52,7 +62,7 @@ function Facets({ facets, addFilter, removeFilter, filters }: any) {
               <h3 className="text-base font-semibold mb-2 uppercase">
                 {facet.name}
               </h3>
-              {facet.entries.map((bucket: any) => {
+              {facet.entries.map((bucket) => {
                 const isSelected =
                   filters[facet.name] &&
                   filters[facet.name].includes(bucket.value)
@@ -82,30 +92,45 @@ function Facets({ facets, addFilter, removeFilter, filters }: any) {
   )
 }
 
+const PAGE_SIZE = 12
+
 function App() {
   const [query, setQuery] = useState('')
   const [page, setPage] = useState(1)
-  const [results, setResults] = useState<any>(null)
-  const [filters, setFilters] = useState<any>({})
+  const [results, setResults] = useState<{
+    facets: FacetProps['facets']
+    hits: {
+      total: { value: number }
+      hits: {
+        _id: string
+        _source: { title: string; poster: string; plot: string }
+      }[]
+    }
+  } | null>(null)
+  const [filters, setFilters] = useState<Record<string, string[]>>({})
 
   const doSearch = async () => {
     const r = request()
       .setSort(['_score'])
       .query(query)
-      .setPageSize(12)
-      .setFrom(12 * (page - 1))
+      .setPageSize(PAGE_SIZE)
+      .setFrom(PAGE_SIZE * (page - 1))
       .addParameter('custom-parameter', 'custom-value')
 
     for (const [key, value] of Object.entries(filters)) {
-      r.addFacetFilter(key, value as string)
+      r.addFacetFilter(key, value as string[])
     }
 
-    const results = await r.search()
+    try {
+      const updatedResults = await r.search()
 
-    setResults(results)
+      setResults(updatedResults as typeof results)
+    } catch (error) {
+      console.log('Error during search', error)
+    }
   }
 
-  const handleSearch = async (e: any) => {
+  const handleSearch = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setPage(1)
     doSearch()
@@ -120,9 +145,9 @@ function App() {
   return (
     <div className="flex flex-col md:flex-row">
       <Facets
-        facets={results && results.facets}
+        facets={results ? results.facets : undefined}
         filters={filters}
-        addFilter={(filter: any, value: any) => {
+        addFilter={(filter, value) => {
           const existingFilters = filters[filter] || []
           setFilters({
             ...filters,
@@ -130,11 +155,11 @@ function App() {
           })
           setPage(1)
         }}
-        removeFilter={(filter: any, value: any) => {
+        removeFilter={(filter, value) => {
           const existingFilters = filters[filter] || []
           setFilters({
             ...filters,
-            [filter]: existingFilters.filter((v: any) => v !== value),
+            [filter]: existingFilters.filter((v) => v !== value),
           })
           setPage(1)
         }}
@@ -159,11 +184,11 @@ function App() {
           </button>
         </form>
         <div className="mt-4">
-          <p className="text-gray-500">{results?.hits?.total?.value} Results</p>
+          <p className="text-gray-500">{results?.hits?.total.value} Results</p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {results &&
-            results.hits.hits.map((hit: any) => {
+            results?.hits?.hits?.map((hit) => {
               return (
                 <div
                   key={hit._id}
@@ -189,12 +214,15 @@ function App() {
               Prev Page
             </button>
           )}
-          <button
-            className="bg-blue-500 text-white px-4 py-2 rounded-md"
-            onClick={() => setPage(page + 1)}
-          >
-            Next Page
-          </button>
+          {results?.hits?.total.value &&
+            (results?.hits?.total.value || 0) / PAGE_SIZE < page && (
+              <button
+                className="bg-blue-500 text-white px-4 py-2 rounded-md"
+                onClick={() => setPage(page + 1)}
+              >
+                Next Page
+              </button>
+            )}
         </div>
       </div>
     </div>

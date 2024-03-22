@@ -122,5 +122,6 @@ export class API {
     }
 
     console.error(error)
+    throw error
   }
 }
